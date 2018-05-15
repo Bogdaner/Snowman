@@ -12,12 +12,12 @@ Collider::~Collider()
 {
 }
 
-void Collider::move(float dx, float dy)
+void Collider::move(const float dx, const float dy)
 {
 	body.move(dx, dy);
 }
 
-bool Collider::check_collision(Collider& other, CollisionDir& dir ,float push)
+bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 {
 	sf::Vector2f otherPosition = other.get_position();
 	sf::Vector2f otherHalfSize = other.get_half_size();
@@ -73,7 +73,7 @@ sf::Vector2f Collider::get_position() const
 	return body.getPosition();
 }
 
-sf::Vector2f Collider::get_half_size()
+sf::Vector2f Collider::get_half_size() const
 {
 	return body.getSize() / 2.0f;
 }

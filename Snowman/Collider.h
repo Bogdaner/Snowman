@@ -14,10 +14,10 @@ class Collider
 public:
 	Collider();
 	~Collider();
-	void move(float dx, float dy);
-	bool check_collision(Collider& other, CollisionDir& dir,float push);
+	void move(const float dx, const float dy);
+	bool check_collision(Collider& other, CollisionDir& dir, float push);
 	sf::Vector2f get_position() const;
-	sf::Vector2f get_half_size();
+	sf::Vector2f get_half_size() const;
 private:
 	sf::RectangleShape& body;
 };
