@@ -21,6 +21,8 @@ void Character::update (const float& gravity, const float& time)
 
 void Character::set_direction (const sf::Vector2f& dir)
 {
-	velocity = dir * speed;
+	velocity = dir * SPEED;
 	// tu te¿ animacja bd siê zmieniaæ;
 }
+
+const float Character::SPEED = 100.0f;

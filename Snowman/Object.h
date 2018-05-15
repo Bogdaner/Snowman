@@ -23,5 +23,5 @@ protected:
 	sf::Vector2f position;
 	sf::Vector2f size;
 	sf::Vector2f velocity;
-	static const float weight;
+	static const float WEIGHT;
 };

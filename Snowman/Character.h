@@ -5,7 +5,7 @@ class Character :
 	public Object
 {
 private:
-	static constexpr float speed = 100.0f;
+	static const float SPEED;
 public:
 	Character (const sf::Vector2f&);
 	void draw (sf::RenderTarget&) const;
