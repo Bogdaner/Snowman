@@ -15,7 +15,7 @@ public:
 	void set_velocity(const sf::Vector2f&);
 	void set_direction (const sf::Vector2f&);
 	void set_sprite (const sf::RectangleShape&);
-	virtual void update(void (const float&),const float&) = 0;
+	virtual void update(const float, const float) = 0;
 	virtual void draw(sf::RenderTarget&) const = 0;
 protected:
 	sf::RectangleShape sprite;

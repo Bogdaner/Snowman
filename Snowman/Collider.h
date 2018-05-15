@@ -12,7 +12,7 @@ enum CollisionDir
 class Collider
 {
 public:
-	Collider();
+	Collider(sf::RectangleShape& body);
 	~Collider();
 	void move(const float dx, const float dy);
 	bool check_collision(Collider& other, CollisionDir& dir, float push);

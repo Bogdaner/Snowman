@@ -2,7 +2,7 @@
 #include "Collider.h"
 
 
-Collider::Collider() : body{body}
+Collider::Collider(sf::RectangleShape& body) : body{body}
 {
 
 }
