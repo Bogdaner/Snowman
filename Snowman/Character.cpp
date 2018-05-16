@@ -9,23 +9,39 @@ Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 
 void Character::update(const float gravity, const float delta_time)
 {
-	set_velocity(direction);
+	set_velocity(direction, gravity, delta_time);
 	// tu jeszcze bd updateowaæ klatki;
 	sprite.move(velocity * delta_time);
 }
 
-void Character::set_velocity (sf::Vector2f& dir)
+void Character::on_collision()
+{
+	if (collison_dir == CollisionDir::COLLISION_LEFT || collison_dir == CollisionDir::COLLISION_RIGHT)
+		velocity.x = 0;
+	if (collison_dir == CollisionDir::COLLISION_DOWN)
+	{
+		velocity.y = 0;
+		can_jump = true;
+	}
+	else if (collison_dir == CollisionDir::COLLISION_UP)
+		velocity.y = 0;
+}
+
+void Character::set_velocity (sf::Vector2f& dir, const float gravity, const float delta_time)
 {
 	dir = sf::Vector2f(0, 0);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) dir.x = 1.0;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) dir.x = -1.0f;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) dir.y = -1.0f;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) dir.y = 1.0f;
-	//{
-	//	// jump
-	//}
-	velocity = dir * SPEED;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && can_jump)
+	{
+		velocity.y = -sqrtf(2.0f * gravity * JUMP_HEIGHT);
+		can_jump = false;
+	}
+	velocity.y += gravity * delta_time;
+
+	velocity.x = dir.x * SPEED;
 	// tu te¿ animacja bd siê zmieniaæ;
 }
 
 const float Character::SPEED = 100.0f;
+const float Character::JUMP_HEIGHT = 250.0f;

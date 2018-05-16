@@ -8,8 +8,11 @@ public:
 	Character(const sf::Vector2f& position, const sf::Vector2f& size);
 	void update(const float gravity, const float delta_time) override;
 	CollisionDir collison_dir;
+	void on_collision();
 private:
-	void set_velocity(sf::Vector2f&);
+	bool can_jump;
+	void set_velocity(sf::Vector2f& dir, const float gravity, const float delta_time);
 	static const float SPEED;
+	static const float JUMP_HEIGHT;
 
 };

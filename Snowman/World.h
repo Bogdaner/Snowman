@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "Character.h"
 #include "TileMap.h"
+#include <iostream>
 
 class World
 {

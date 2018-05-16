@@ -54,13 +54,13 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 			{
 				move(0.0f, intersectY * (1.0f - push));
 				other.move(0.0f, -intersectY * push);
-				dir = CollisionDir::COLLISION_DOWN;
+				dir = CollisionDir::COLLISION_UP;
 			}
 			else
 			{
 				move(0.0f, -intersectY * (1.0f - push));
 				other.move(0.0f, intersectY * push);
-				dir = CollisionDir::COLLISION_UP;
+				dir = CollisionDir::COLLISION_DOWN;
 			}
 		}
 		return true;

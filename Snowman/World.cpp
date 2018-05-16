@@ -17,6 +17,11 @@ void World::start()
 	while (window.isOpen())
 	{
 		delta_time = clock.restart().asSeconds();
+		if (delta_time > 1.0f / 20.0f)
+			delta_time = 1.0f / 20.0f;
+
+		// std::cout << 1.0f / delta_time << std::endl; // print fps
+
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -24,15 +29,16 @@ void World::start()
 		}
 
 		player.update(GRAVITY, delta_time);
-		for (int i = 0; i < objects.size(); i++)
+		for (unsigned int i = 0; i < objects.size(); i++)
 		{
 			objects[i]->update(GRAVITY, delta_time);
 		}
 
 		Collider player_collider = player.get_collider();
-		for (int i = 0; i < objects.size(); i++)
+		for (unsigned int i = 0; i < objects.size(); i++)
 		{
-			objects[i]->get_collider().check_collision(player_collider, player.collison_dir, 0.5f);
+			if (objects[i]->get_collider().check_collision(player_collider, player.collison_dir, 1.0f))
+				player.on_collision();
 		}
 
 		window.clear();
@@ -45,4 +51,4 @@ void World::start()
 
 const sf::Vector2u World::WINDOW_SIZE(1280, 720);
 
-const float World::GRAVITY = 9.81f;
+const float World::GRAVITY = 981.0f;
