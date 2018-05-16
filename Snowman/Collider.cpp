@@ -70,7 +70,7 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 
 sf::Vector2f Collider::get_position() const
 {
-	return body.getPosition();
+	return body.getPosition() + get_half_size();
 }
 
 sf::Vector2f Collider::get_half_size() const

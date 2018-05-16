@@ -1,58 +1,21 @@
 #include "stdafx.h"
 #include "Object.h"
 
-Object::Object (const sf::Vector2f& pos)
-	:position {pos}
+Object::Object(const sf::Vector2f& position, const sf::Vector2f& size)
+	:position{ position }, size{ size }
 {
-
+	sprite.setSize(size);
+	//sprite.setOrigin(size / 2.0f);
+	sprite.setPosition(position);
+	sprite.setTexture(nullptr);
 }
 
-sf::Vector2f Object::get_position () const
+void Object::draw(sf::RenderTarget& window)
 {
-	return position;
+	window.draw(sprite);
 }
 
-sf::Vector2f Object::get_size () const
+Collider Object::get_collider()
 {
-	return size;
-}
-
-sf::Vector2f Object::get_velocity () const
-{
-	return velocity;
-}
-
-sf::Vector2f Object::get_direction () const
-{
-	return direction;
-}
-
-sf::RectangleShape Object::get_sprite () const
-{
-	return sprite;
-}
-
-void Object::set_position (const sf::Vector2f& pos)
-{
-	position = pos;
-}
-
-void Object::set_size (const sf::Vector2f& siz)
-{
-	size = siz;
-}
-
-void Object::set_velocity (const sf::Vector2f& vel)
-{
-	velocity = vel;
-}
-
-void Object::set_direction (const sf::Vector2f& dir)
-{
-	direction = dir;
-}
-
-void Object::set_sprite (const sf::RectangleShape& spr)
-{
-	sprite = spr;
+	return Collider(sprite);
 }
