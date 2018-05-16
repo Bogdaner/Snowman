@@ -9,7 +9,8 @@ public:
 	void update(const float gravity, const float delta_time) override;
 	CollisionDir collison_dir;
 private:
-	void set_velocity(sf::Vector2f&);
+	std::vector<sf::Texture> CHAR_TEXTURES;
+	std::vector<sf::Texture> load_textures ();
+	void set_velocity(sf::Vector2f& vel);
 	static const float SPEED;
-
 };

@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "Object.h"
 
+
+
 Object::Object(const sf::Vector2f& position, const sf::Vector2f& size)
 	:position{ position }, size{ size }
 {
 	sprite.setSize(size);
 	//sprite.setOrigin(size / 2.0f);
 	sprite.setPosition(position);
-	sprite.setTexture(nullptr);
 }
 
 void Object::draw(sf::RenderTarget& window)
