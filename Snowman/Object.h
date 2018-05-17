@@ -2,13 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include "Collider.h"
 
-class Object
+class Object : public sf::Drawable, public sf::Transformable
 {
 public:
 	Object (const sf::Vector2f& position, const sf::Vector2f& size);
 
 	virtual void update(const float gravity, const float delta_time) = 0;
-	virtual void draw(sf::RenderTarget& window);
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	Collider get_collider();
 protected:
 	sf::RectangleShape sprite;

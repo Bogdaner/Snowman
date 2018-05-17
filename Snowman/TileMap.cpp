@@ -4,16 +4,17 @@
 TileMap::TileMap()
 {
 	tileset.loadFromFile("textures/tiles.png");
+	tileset.setSmooth(false);
 	load_from_file("level.txt");
 	for(int i = 0; i < width; i++)
 		for (int j = 0; j < height; j++)
 		{
 			//get pointer to the current tile quad
 			sf::Vertex *quad = &vertices[(i + j * width) * 4];
-			quad[0].position = sf::Vector2f((float)i * TILE_WIDTH, (float)j * TILE_HEIGHT);
-			quad[1].position = sf::Vector2f((float)(i + 1) * TILE_WIDTH, (float)j * TILE_HEIGHT);
-			quad[2].position = sf::Vector2f((float)(i + 1) * TILE_WIDTH, (float)(j + 1) * TILE_HEIGHT);
-			quad[3].position = sf::Vector2f((float)i * TILE_WIDTH, (float)(j + 1) * TILE_HEIGHT);
+			quad[0].position = sf::Vector2f(float(i * TILE_WIDTH) , float(j * TILE_HEIGHT));
+			quad[1].position = sf::Vector2f(float((i + 1) * TILE_WIDTH), float(j * TILE_HEIGHT));
+			quad[2].position = sf::Vector2f(float((i + 1) * TILE_WIDTH), float((j + 1) * TILE_HEIGHT));
+			quad[3].position = sf::Vector2f(float(i * TILE_WIDTH), float((j + 1) * TILE_HEIGHT));
 
 			select_texture(quad, tiles[i + j * width]);
 		}
@@ -68,7 +69,7 @@ void TileMap::select_texture(sf::Vertex* v, char tex)
 	v[3].texCoords = sf::Vector2f(tmp.x * TILE_WIDTH + 2 * tmp.x, (tmp.y + 1) * TILE_HEIGHT + 2 * tmp.y);
 
 	if (is_platform == true)
-		platforms.push_back(Platform(v[0].position, sf::Vector2f((float)TILE_WIDTH, (float)TILE_HEIGHT), v));
+		platforms.push_back(Platform(sf::Vector2f(v[0].position.x + TILE_WIDTH / 2, v[0].position.y + TILE_HEIGHT / 2), sf::Vector2f((float)TILE_WIDTH, (float)TILE_HEIGHT), v));;
 }
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const

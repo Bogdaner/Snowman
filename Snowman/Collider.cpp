@@ -37,15 +37,15 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 		{
 			if (deltaX > 0.0f)
 			{
-				move(intersectX * (1.0f - push), 0.0f);
-				other.move(-intersectX * push, 0.0f);
-				dir = CollisionDir::COLLISION_RIGHT;
+				move((intersectX - 0.5f) * (1.0f - push), 0.0f);
+				other.move((-intersectX + 0.5f) * push, 0.0f);
+				dir = CollisionDir::COLLISION_LEFT;
 			}
 			else
 			{
-				move(-intersectX * (1.0f - push), 0.0f);
-				other.move(intersectX * push, 0.0f);
-				dir = CollisionDir::COLLISION_LEFT;
+				move((-intersectX + 0.5f) * (1.0f - push), 0.0f);
+				other.move((intersectX - 0.5f) * push, 0.0f);
+				dir = CollisionDir::COLLISION_RIGHT;
 			}
 		}
 		else
@@ -56,7 +56,7 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 				other.move(0.0f, -intersectY * push);
 				dir = CollisionDir::COLLISION_UP;
 			}
-			else
+			else 
 			{
 				move(0.0f, -intersectY * (1.0f - push));
 				other.move(0.0f, intersectY * push);
@@ -70,7 +70,7 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 
 sf::Vector2f Collider::get_position() const
 {
-	return body.getPosition() + get_half_size();
+	return body.getPosition();
 }
 
 sf::Vector2f Collider::get_half_size() const

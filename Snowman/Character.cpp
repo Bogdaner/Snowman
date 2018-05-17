@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Character.h"
+#include <iostream>
 
 Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object(position, size)
@@ -23,8 +24,13 @@ void Character::on_collision()
 		velocity.y = 0;
 		can_jump = true;
 	}
-	else if (collison_dir == CollisionDir::COLLISION_UP)
+	else if (collison_dir == CollisionDir::COLLISION_UP && velocity.y < 0.0f)
 		velocity.y = 0;
+}
+
+sf::Vector2f Character::get_center_position() const
+{
+	return sprite.getPosition();
 }
 
 void Character::set_velocity (sf::Vector2f& dir, const float gravity, const float delta_time)
@@ -43,5 +49,5 @@ void Character::set_velocity (sf::Vector2f& dir, const float gravity, const floa
 	// tu te¿ animacja bd siê zmieniaæ;
 }
 
-const float Character::SPEED = 100.0f;
+const float Character::SPEED = 170.0f;
 const float Character::JUMP_HEIGHT = 250.0f;

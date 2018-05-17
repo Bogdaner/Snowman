@@ -16,8 +16,5 @@ Platform::~Platform()
 
 void Platform::update(const float gravity, const float delta_time)
 {
-	tile[0].position = sprite.getPosition();
-	tile[1].position = sf::Vector2f(sprite.getPosition().x + size.x, sprite.getPosition().y);
-	tile[2].position = sprite.getPosition() + size;
-	tile[3].position = sf::Vector2f(sprite.getPosition().x, sprite.getPosition().y + size.y);
+
 }

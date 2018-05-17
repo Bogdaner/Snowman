@@ -5,14 +5,15 @@ Object::Object(const sf::Vector2f& position, const sf::Vector2f& size)
 	:position{ position }, size{ size }
 {
 	sprite.setSize(size);
-	//sprite.setOrigin(size / 2.0f);
+	sprite.setOrigin(sprite.getSize() / 2.0f);
 	sprite.setPosition(position);
 	sprite.setTexture(nullptr);
 }
 
-void Object::draw(sf::RenderTarget& window)
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	window.draw(sprite);
+	states.transform *= getTransform();
+	target.draw(sprite, states);
 }
 
 Collider Object::get_collider()
