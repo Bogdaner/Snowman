@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "World.h"
 
-World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(30.0f, 30.0f)) // na razie wspolrzedne gracza z dupy 
+World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(50.0f, 60.0f)) // na razie wspolrzedne gracza z dupy 
 {
 	for (auto platform : map.get_platforms())
 		objects.push_back(std::unique_ptr<Platform>(new Platform(platform)));

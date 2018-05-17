@@ -4,14 +4,22 @@
 Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object(position, size)
 {
-	CHAR_TEXTURES = load_textures ();
-	sprite.setTexture (&CHAR_TEXTURES[0]);
+	cur_animation = AnimationIndex::WalkingRight;
+	animations[int (AnimationIndex::WalkingLeft)] = Animation (int (AnimationIndex::WalkingLeft));
+	animations[int (AnimationIndex::WalkingRight)] = Animation (int (AnimationIndex::WalkingRight));
 }
 
 void Character::update(const float gravity, const float delta_time)
 {
 	set_velocity(direction);
 	// tu jeszcze bd updateowaæ klatki;
+	animations[int (cur_animation)].update (delta_time);
+	if (velocity.x == 0)
+		animations[int (cur_animation)].set_sprite (sprite, false);
+	else
+	{
+		animations[int (cur_animation)].set_sprite (sprite, true);
+	}
 	sprite.move(velocity * delta_time);
 }
 
@@ -26,23 +34,12 @@ void Character::set_velocity (sf::Vector2f& dir)
 	//	// jump
 	//}
 	velocity = dir * SPEED;
+	if (direction.x > 0.0f)
+		cur_animation = AnimationIndex::WalkingRight;
+	else if (direction.x < 0.0f)
+		cur_animation = AnimationIndex::WalkingLeft;
+
 	// tu te¿ animacja bd siê zmieniaæ;
-}
-
-std::vector<sf::Texture> Character::load_textures ()
-{
-	std::vector<sf::Texture> to_return;
-	sf::Texture tmp;
-	std::string name;
-	for (int i = 1; i <= 9; i++)
-	{
-		name = "textures/walk" + std::to_string (i);
-		name += ".png";
-		tmp.loadFromFile (name);
-		to_return.push_back (tmp);
-	}
-	return to_return;
-
 }
 
 const float Character::SPEED = 100.0f;
