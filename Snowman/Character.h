@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Animation.h"
 
 class Character :
 	public Object
@@ -14,6 +15,14 @@ public:
 private:
 	bool can_jump;
 	void set_velocity(sf::Vector2f& dir, const float gravity, const float delta_time);
-	static const float SPEED;
+	enum class AnimationIndex
+	{
+		WalkingLeft,
+		WalkingRight,
+		Count
+	};
+	Animation animations[int (AnimationIndex::Count)];
+	AnimationIndex cur_animation;
 	static const float JUMP_HEIGHT;
+	static const float SPEED;
 };

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "World.h"
 
+
 World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
 	camera{sf::Vector2f(0.0f, 0.0f), WINDOW_SIZE} // camera (plater position, screen size)
 {

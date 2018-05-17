@@ -5,13 +5,22 @@
 Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object(position, size)
 {
-
+	cur_animation = AnimationIndex::WalkingRight;
+	animations[int (AnimationIndex::WalkingLeft)] = Animation (int (AnimationIndex::WalkingLeft));
+	animations[int (AnimationIndex::WalkingRight)] = Animation (int (AnimationIndex::WalkingRight));
 }
 
 void Character::update(const float gravity, const float delta_time)
 {
 	set_velocity(direction, gravity, delta_time);
 	// tu jeszcze bd updateowaæ klatki;
+	animations[int (cur_animation)].update (delta_time);
+	if (velocity.x == 0)
+		animations[int (cur_animation)].set_sprite (sprite, false);
+	else
+	{
+		animations[int (cur_animation)].set_sprite (sprite, true);
+	}
 	sprite.move(velocity * delta_time);
 }
 
@@ -47,8 +56,15 @@ void Character::set_velocity (sf::Vector2f& dir, const float gravity, const floa
 		can_jump = false;
 
 	velocity.y += gravity * delta_time;
-	std::cout << velocity.y << std::endl;
+	//std::cout << velocity.y << std::endl;
 	velocity.x = dir.x * SPEED;
+
+	if (direction.x > 0.0f)
+		cur_animation = AnimationIndex::WalkingRight;
+	else if (direction.x < 0.0f)
+		cur_animation = AnimationIndex::WalkingLeft;
+
+
 	// tu te¿ animacja bd siê zmieniaæ;
 }
 
