@@ -43,8 +43,11 @@ void Character::set_velocity (sf::Vector2f& dir, const float gravity, const floa
 		velocity.y = -sqrtf(2.0f * gravity * JUMP_HEIGHT);
 		can_jump = false;
 	}
-	velocity.y += gravity * delta_time;
+	if (collison_dir == CollisionDir::NO_COLLISION)
+		can_jump = false;
 
+	velocity.y += gravity * delta_time;
+	std::cout << velocity.y << std::endl;
 	velocity.x = dir.x * SPEED;
 	// tu te¿ animacja bd siê zmieniaæ;
 }

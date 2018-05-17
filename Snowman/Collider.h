@@ -7,6 +7,7 @@ enum CollisionDir
 	COLLISION_RIGHT,
 	COLLISION_UP,
 	COLLISION_DOWN,
+	NO_COLLISION,
 };
 
 class Collider

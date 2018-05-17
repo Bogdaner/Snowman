@@ -37,14 +37,14 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 		{
 			if (deltaX > 0.0f)
 			{
-				move((intersectX - 0.5f) * (1.0f - push), 0.0f);
-				other.move((-intersectX + 0.5f) * push, 0.0f);
+				move((intersectX - 0.55f) * (1.0f - push), 0.0f);
+				other.move((-intersectX + 0.55f) * push, 0.0f);
 				dir = CollisionDir::COLLISION_LEFT;
 			}
 			else
 			{
-				move((-intersectX + 0.5f) * (1.0f - push), 0.0f);
-				other.move((intersectX - 0.5f) * push, 0.0f);
+				move((-intersectX + 0.55f) * (1.0f - push), 0.0f);
+				other.move((intersectX - 0.55f) * push, 0.0f);
 				dir = CollisionDir::COLLISION_RIGHT;
 			}
 		}
@@ -65,6 +65,7 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 		}
 		return true;
 	}
+	dir = CollisionDir::NO_COLLISION;
 	return false;
 }
 
