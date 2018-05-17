@@ -4,8 +4,8 @@
 class Animation
 {
 public:
-	Animation () = default;				// rozwi¹zanie chwilowe z left or right
-	Animation (int left_or_right);		// wiec nie spinaj dupy kappa xD
+	Animation () = default;			// rozwi¹zanie chwilowe z right
+	Animation (int right);			// wiec nie spinaj dupy kappa xD
 	void set_sprite (sf::RectangleShape& sprite, bool is_moving) const;
 	void update (float t);
 private:

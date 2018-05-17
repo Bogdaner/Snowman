@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Animation.h"
 
-Animation::Animation (int left_or_right)
+Animation::Animation (int right)
 	:time{ 0.0f }, frame{ 0 }
 {
-	if(left_or_right)
+	if(right)
 		char_textures = load_textures (1, 9);
 	else
 		char_textures = load_textures (10, 18);
