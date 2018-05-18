@@ -64,9 +64,28 @@ void Character::set_velocity (sf::Vector2f& dir, const float gravity, const floa
 	else if (direction.x < 0.0f)
 		cur_animation = AnimationIndex::WalkingLeft;
 
-
-	// tu te¿ animacja bd siê zmieniaæ;
 }
 
-const float Character::SPEED = 170.0f;
+void Character::shooting(sf::RenderWindow& window)
+{
+	if (sf::Mouse::isButtonPressed (sf::Mouse::Button::Left) && !can_shoot) {
+		sf::Vector2f on_window_pos = (sf::Vector2f)window.getSize () / 2.0f;		// postaæ jest zawsze na œrodku 
+		position = sprite.getPosition ();											// wiêc window size / 2 daje gdzie jest postaæ 
+		can_shoot = true;															// wzg ekranu 
+		sf::Vector2i throw_click;
+		throw_click = sf::Mouse::getPosition (window);								
+		float relx = throw_click.x - on_window_pos.x;								// proporcje 
+		float rely = throw_click.y - on_window_pos.y;
+		float relmax = abs (rely) + abs (relx);
+		relx = relx / relmax;
+		rely = rely / relmax;
+		snowballs.push_back (std::unique_ptr<Snowball> (new Snowball ({ relx * STRENGTH, rely * STRENGTH },
+			{position.x, position.y}, { 25.0f,25.0f })));
+	}
+	else if (!sf::Mouse::isButtonPressed (sf::Mouse::Button::Left)) {				// ¿eby jeden klik == jeden strza³ 
+		can_shoot = false;
+	}
+}
+
+const float Character::STRENGTH = 6.0f;												// si³a rzutu -> wiêksza == œnie¿ka leci dalej
 const float Character::JUMP_HEIGHT = 250.0f;

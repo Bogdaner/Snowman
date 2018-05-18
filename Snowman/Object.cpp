@@ -21,3 +21,5 @@ Collider Object::get_collider()
 {
 	return Collider(sprite);
 }
+
+const float Object::SPEED = 170.0f;
