@@ -5,6 +5,8 @@
 Snowball::Snowball (const sf::Vector2f& dir, const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object (position, size)
 {
+	delete_step = delete_steps::no_collision;
+	time_of_death = 0;
 	direction = dir;
 	velocity.y = dir.y * SPEED;
 	velocity.x = dir.x * SPEED;
@@ -16,10 +18,18 @@ void Snowball::update (const float gravity, const float delta_time)
 {
 	set_velocity (direction, gravity, delta_time);
 	sprite.move (velocity * delta_time);
+	if(delete_step == delete_steps::after_collision)
+		time_of_death += delta_time;
+	if (time_of_death > TIME_TO_ERASING)
+		delete_step = delete_steps::to_del;
+
 }
 
 void Snowball::on_collision ()				// tu trzeba ogarn¹æ kolizjê chyba 
 {											// chwilowo jest metoda z postaci xD
+	texture.loadFromFile ("textures/expo.png");
+	sprite.setTexture (&texture);
+	delete_step = delete_steps::after_collision;
 	if (collison_dir == CollisionDir::COLLISION_LEFT || collison_dir == CollisionDir::COLLISION_RIGHT)
 		velocity.x = 0;
 	if (collison_dir == CollisionDir::COLLISION_DOWN)
@@ -42,3 +52,5 @@ void Snowball::draw (sf::RenderTarget& target) const
 {
 	target.draw (sprite);
 }
+
+const float Snowball::TIME_TO_ERASING = 0.05f;
