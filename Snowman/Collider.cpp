@@ -50,13 +50,13 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 		}
 		else
 		{
-			if (deltaY > 0.0f)
+			if (deltaY > 0.55f && abs(intersectY) > 0.55f)
 			{
 				move(0.0f, intersectY * (1.0f - push));
 				other.move(0.0f, -intersectY * push);
 				dir = CollisionDir::COLLISION_UP;
 			}
-			else 
+			else if(abs(intersectY) > 0.55f)
 			{
 				move(0.0f, -intersectY * (1.0f - push));
 				other.move(0.0f, intersectY * push);

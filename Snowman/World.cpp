@@ -44,8 +44,8 @@ void World::start()
 		}
 		player.update(GRAVITY, delta_time);
 
-		camera.setCenter(player.get_center_position());
-		//camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
+		//camera.setCenter(player.get_center_position());
+		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
 
 		window.clear();
 		window.setView(camera);
