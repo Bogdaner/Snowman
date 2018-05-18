@@ -25,10 +25,6 @@ TileMap::~TileMap()
 
 }
 
-std::vector<Platform> TileMap::get_platforms()
-{
-	return platforms;
-}
 
 void TileMap::load_from_file(const std::string s)
 {
@@ -69,7 +65,7 @@ void TileMap::select_texture(sf::Vertex* v, char tex)
 	v[3].texCoords = sf::Vector2f(tmp.x * TILE_WIDTH + 2 * tmp.x, (tmp.y + 1) * TILE_HEIGHT + 2 * tmp.y);
 
 	if (is_platform == true)
-		platforms.push_back(Platform(sf::Vector2f(v[0].position.x + TILE_WIDTH / 2, v[0].position.y + TILE_HEIGHT / 2), sf::Vector2f((float)TILE_WIDTH, (float)TILE_HEIGHT), v));;
+		platforms.push_back(std::unique_ptr<Platform> (new Platform(sf::Vector2f(v[0].position.x + TILE_WIDTH / 2, v[0].position.y + TILE_HEIGHT / 2), sf::Vector2f((float)TILE_WIDTH, (float)TILE_HEIGHT), v)));;
 }
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const

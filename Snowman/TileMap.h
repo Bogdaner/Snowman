@@ -11,9 +11,8 @@ class TileMap : public sf::Drawable, public sf::Transformable
 public:
 	TileMap();
 	~TileMap();
-	std::vector<Platform> get_platforms();
+	std::vector<std::unique_ptr<Platform>> platforms;
 private:
-	std::vector<Platform> platforms;
 	void load_from_file(const std::string s);
 	void select_texture(sf::Vertex* v, char tex);
 	std::vector<char> tiles;  // array of characters that representing tiles
