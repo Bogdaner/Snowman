@@ -87,5 +87,5 @@ void Character::shooting(sf::RenderWindow& window)
 	}
 }
 
-const float Character::STRENGTH = 6.0f;												// si³a rzutu -> wiêksza == œnie¿ka leci dalej
+const float Character::STRENGTH = 8.5f;												// si³a rzutu -> wiêksza == œnie¿ka leci dalej
 const float Character::JUMP_HEIGHT = 250.0f;
