@@ -68,8 +68,7 @@ void Character::set_velocity (sf::Vector2f& dir, const float gravity, const floa
 void Character::shooting(sf::RenderWindow& window)
 {
 	if (sf::Mouse::isButtonPressed (sf::Mouse::Button::Left) && !can_shoot) {
-		sf::Vector2f on_window_pos = (sf::Vector2f)window.getSize () / 2.0f;		// postaæ jest zawsze na œrodku 
-		position = sprite.getPosition ();											// wiêc window size / 2 daje gdzie jest postaæ 
+		sf::Vector2f on_window_pos = (sf::Vector2f)window.getSize () / 2.0f;		// postaæ jest zawsze na œrodku 										// wiêc window size / 2 daje gdzie jest postaæ 
 		can_shoot = true;															// wzg ekranu 
 		sf::Vector2i throw_click;
 		throw_click = sf::Mouse::getPosition (window);								
@@ -79,7 +78,7 @@ void Character::shooting(sf::RenderWindow& window)
 		relx = relx / relmax;
 		rely = rely / relmax;
 		snowballs.push_back (std::unique_ptr<Snowball> (new Snowball ({ relx * STRENGTH, rely * STRENGTH },
-			{position.x, position.y}, { 25.0f,25.0f })));
+			{ sprite.getPosition().x, sprite.getPosition().y}, { 25.0f,25.0f })));
 	}
 	else if (!sf::Mouse::isButtonPressed (sf::Mouse::Button::Left)) {				// ¿eby jeden klik == jeden strza³ 
 		can_shoot = false;

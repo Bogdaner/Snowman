@@ -4,7 +4,7 @@
 
 
 Object::Object(const sf::Vector2f& position, const sf::Vector2f& size)
-	:position{ position }, size{ size }, collider{sprite}
+	:size{ size }, collider{sprite}
 {
 	sprite.setSize(size);
 	sprite.setOrigin(sprite.getSize() / 2.0f);

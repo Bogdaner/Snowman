@@ -2,7 +2,7 @@
 #include "World.h"
 
 
-World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(100.0f, 100.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
+World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
 	camera{sf::Vector2f(0.0f, 0.0f), WINDOW_SIZE} // camera (plater position, screen size)
 {
 
@@ -33,9 +33,7 @@ void World::start()
 		for (unsigned int i = 0; i < map.platforms.size(); i++)
 		{
 			map.platforms[i]->update(GRAVITY, delta_time);
-		}
-
-		
+		}	
 		for (unsigned int i = 0; i < map.platforms.size(); i++)
 		{
 			if (map.platforms[i]->collider.check_collision(player.collider, player.collison_dir, 1.0f))
@@ -48,6 +46,7 @@ void World::start()
 				}
 		}
 		player.update(GRAVITY, delta_time);
+
 		//camera.setCenter(player.get_center_position());
 		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
 
@@ -57,12 +56,14 @@ void World::start()
 			if(player.snowballs[i]->delete_step == Snowball::delete_steps::to_del)
 				player.snowballs.erase(player.snowballs.begin () + i);
 		}			// mo¿na to pewnie ³adniej gdzieœ zrobic
-	
+		
+		connection.send_data(player);
+		//connection.receive_data(player);
+
 		// Te metody na razie tu tymczasowo potem sie ogarnie jakos razem wszystkie
 		window.clear();
 		//Camera
 		window.setView(camera);
-
 		//Drawing
 		window.draw(map);
 		window.draw(player); 
