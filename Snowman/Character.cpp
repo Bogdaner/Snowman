@@ -56,7 +56,6 @@ void Character::set_velocity (sf::Vector2f& dir, const float gravity, const floa
 		can_jump = false;
 
 	velocity.y += gravity * delta_time;
-	//std::cout << velocity.y << std::endl;
 	velocity.x = dir.x * SPEED;
 
 	if (direction.x > 0.0f)

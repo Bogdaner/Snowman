@@ -8,7 +8,6 @@ public:
 	void update (const float gravity, const float delta_time) override;
 	CollisionDir collison_dir;
 	void on_collision ();
-	sf::Vector2f get_center_position () const;
 	void draw (sf::RenderTarget& target) const;
 	enum class delete_steps {
 		no_collision,

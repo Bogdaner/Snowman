@@ -44,25 +44,28 @@ void World::start()
 			for (unsigned int j = 0; j < player.snowballs.size(); j++)			
 				if (map.platforms[i]->collider.check_collision (player.snowballs[j]->collider, player.snowballs[j]->collison_dir, 1.0f)) {
 					player.snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
-					//player.snowballs.erase (player.snowballs.begin () + j);
+															//player.snowballs.erase (player.snowballs.begin () + j);
 				}
 		}
 		player.update(GRAVITY, delta_time);
 		//camera.setCenter(player.get_center_position());
 		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
 
-		player.shooting (window);											// metoda ze strzelaniem dla postaci 
+		player.shooting (window);													// metoda ze strzelaniem dla postaci 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++) {				// update œnie¿ek
 			player.snowballs[i]->update (GRAVITY, delta_time);
 			if(player.snowballs[i]->delete_step == Snowball::delete_steps::to_del)
 				player.snowballs.erase(player.snowballs.begin () + i);
 		}			// mo¿na to pewnie ³adniej gdzieœ zrobic
-
+	
+		// Te metody na razie tu tymczasowo potem sie ogarnie jakos razem wszystkie
 		window.clear();
+		//Camera
 		window.setView(camera);
-		window.draw(map);
-		window.draw(player); // Te metody na razie tu tymczasowo potem sie ogarnie jakos razem wszystkie
 
+		//Drawing
+		window.draw(map);
+		window.draw(player); 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++)				// nie mia³em pomys³u jak je rysowaæ xD
 			player.snowballs[i]->draw (window);									// trzeba jeszcze dorobic kolizje dla sniezek
 

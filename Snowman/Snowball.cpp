@@ -22,7 +22,6 @@ void Snowball::update (const float gravity, const float delta_time)
 		time_of_death += delta_time;
 	if (time_of_death > TIME_TO_ERASING)
 		delete_step = delete_steps::to_del;
-
 }
 
 void Snowball::on_collision ()				// tu trzeba ogarn¹æ kolizjê chyba 
@@ -36,11 +35,6 @@ void Snowball::on_collision ()				// tu trzeba ogarn¹æ kolizjê chyba
 		velocity.y = 0;
 	else if (collison_dir == CollisionDir::COLLISION_UP && velocity.y < 0.0f)
 		velocity.y = 0;
-}
-
-sf::Vector2f Snowball::get_center_position () const				// w sumie nie wiem po co to przerzucilem tez tu 
-{																// usune jak bd dzialac juz all dobrze
-	return sprite.getPosition ();
 }
 
 void Snowball::set_velocity (sf::Vector2f& dir, const float gravity, const float delta_time)
