@@ -164,6 +164,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="Snowball.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="World.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="Snowball.cpp" />
     <ClCompile Include="Snowman.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

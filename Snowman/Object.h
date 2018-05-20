@@ -10,14 +10,16 @@ public:
 	Object (const sf::Vector2f& position, const sf::Vector2f& size);
 	virtual void update(const float gravity, const float delta_time) = 0;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	Collider get_collider();
+	sf::RectangleShape sprite; // chwilowo przenioslem do public !
+	Collider collider;		   // collider jako zmienna w obiekcie
 private:
 
 protected:
-	sf::RectangleShape sprite;
+	// patrz adnotacja wy¿ej
 	sf::Vector2f direction;
 	sf::Vector2f position;
 	sf::Vector2f size;
 	sf::Vector2f velocity;
 	static const float WEIGHT;
+	static const float SPEED;
 };
