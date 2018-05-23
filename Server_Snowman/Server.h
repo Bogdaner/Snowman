@@ -1,12 +1,9 @@
 #pragma once
 
-#include "Requests.h"
-#include "..\Snowman\Character.h"
-#include "..\Snowman\Object.h"
-#include "..\Snowman\Snowball.h"
-#include "..\Snowman\Connection.h"
 #include "SFML/Network.hpp"
 #include "SFML/Graphics.hpp"
+#include "Requests.h"
+#include "Character.h"
 #include <map>
 #include <memory>
 

@@ -88,7 +88,7 @@ void Server::send_id(const unsigned short int port, const sf::IpAddress ip)
 	sf::Packet p;
 	p << sf::Uint32(IDs);
 	socket.send(p, ip, port);
-	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne te z worlda
+	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne itp te same co w
 	IDs++;
 }
 

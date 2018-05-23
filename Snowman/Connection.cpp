@@ -34,6 +34,7 @@ sf::Uint32 Connection::ask_for_id()
 void Connection::send_data(Character* c, const sf::Uint32 ID)
 {
 	sf::Packet packet;
+	packet << sf::Uint8(Requests::STORE_DATA);
 	packet << ID;
 	packet << *c;
 	socket.send(packet, server_ip, SERVER_PORT);
@@ -55,8 +56,9 @@ void Connection::receive_data(std::map<sf::Uint32, std::unique_ptr<Character>>& 
 		packet >> received_ID;
 		if (received_ID == ID)
 			continue;
+
 		if (enemies.find(received_ID) == enemies.end())
-			;// tutaj tez brakuje tworzenia nowego przeciwnika
+			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
 		
 		packet >> *enemies[received_ID];
 	}

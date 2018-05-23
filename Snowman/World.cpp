@@ -18,7 +18,7 @@ void World::start()
 	while (window.isOpen())
 	{
 		connection.send_data(&player, ID);
-		//connection.receive_data(enemies, ID);
+		connection.receive_data(enemies, ID);
 
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)

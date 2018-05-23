@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SFML\SFML-2.4.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SFML\SFML-2.4.2\include;C:\Users\asd\Desktop\Code\Snowman\Snowman</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,7 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SFML\SFML-2.4.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SFML\SFML-2.4.2\include;C:\Users\asd\Desktop\Code\Snowman\Snowman</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,6 +158,12 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Snowman\Animation.cpp" />
+    <ClCompile Include="..\Snowman\Character.cpp" />
+    <ClCompile Include="..\Snowman\Collider.cpp" />
+    <ClCompile Include="..\Snowman\Object.cpp" />
+    <ClCompile Include="..\Snowman\Platform.cpp" />
+    <ClCompile Include="..\Snowman\Snowball.cpp" />
     <ClCompile Include="Requests.h" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Server_Snowman.cpp" />
