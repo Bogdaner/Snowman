@@ -3,7 +3,7 @@
 
 sf::Packet& operator << (sf::Packet& packet, const Character& character)
 {
-	return packet << character.getPosition().x << character.getPosition().y;
+	return packet << character.sprite.getPosition().x << character.sprite.getPosition().y;
 }
 
 
@@ -37,15 +37,17 @@ void Server::receive()
 	if (socket.receive(packet, sender_ip, sender_port) != sf::Socket::Done)
 		throw ReceiveError;
 
-	int request;
+	sf::Uint8 request;
 	if (packet >> request)
 	{
 		switch (request)
 		{
 		case Requests::ASK_FOR_ID:
 			send_id(sender_port, sender_ip);
+			break;
 		case Requests::STORE_DATA:
 			save_data(packet);
+			break;
 		default:
 			break;
 		}
@@ -57,7 +59,7 @@ void Server::send_all_data()
 	sf::Packet packet = load_all_data();
 	for (auto it = clients.begin(); it != clients.end(); it++)
 	{
-		socket.send(packet, it->second.first, it->first);
+		socket.send(packet, it->second.first, it->second.second);
 	}
 }
 
@@ -65,14 +67,16 @@ void Server::send_all_data()
 sf::Packet Server::load_all_data() const
 {
 	sf::Packet packet;
+	sf::Uint32 size = data.size();
+	packet << size;
 	for (auto it = clients.begin(); it != clients.end(); it++)	//petla po wszystkich klientach
 	{
-		// port = it->first
+		// ID = it->first
 		// ip = it->second.first
-		// id = it->second.second
+		// port = it->second.second
 
-		packet << it->second.second;
-		packet << *data.at(it->second.second); //TO DO overload operator << for character
+		packet << sf::Uint32(it->first); // load ID
+		packet << *data.at(it->first); //TO DO overload operator << for character
 	}
 	return packet;
 }
@@ -80,17 +84,18 @@ sf::Packet Server::load_all_data() const
 
 void Server::send_id(const unsigned short int port, const sf::IpAddress ip)
 {
-	clients[port] = std::make_pair(ip, IDs); // zapisanie klienta
+	clients[IDs] = std::make_pair(ip, port); // zapisanie klienta
 	sf::Packet p;
-	p << IDs;
+	p << sf::Uint32(IDs);
 	socket.send(p, ip, port);
+	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne te z worlda
 	IDs++;
 }
 
 
 void Server::save_data(sf::Packet& packet)
 {
-	int id;
+	sf::Uint32 id;
 	packet >> id;
 	packet >> *data[id]; // TO DO overload operator << for character 
 }

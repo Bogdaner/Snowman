@@ -5,7 +5,7 @@
 World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
 	camera{sf::Vector2f(0.0f, 0.0f), WINDOW_SIZE} // camera (player position, screen size)
 {
-
+	ID = connection.ask_for_id();
 }
 
 World::~World()
@@ -15,11 +15,11 @@ World::~World()
 
 void World::start()
 {
-
-	std::thread s(&Connection::send_data, &player);
-
 	while (window.isOpen())
 	{
+		connection.send_data(&player, ID);
+		//connection.receive_data(enemies, ID);
+
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;

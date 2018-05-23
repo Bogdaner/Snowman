@@ -2,9 +2,13 @@
 
 #include "Requests.h"
 #include "..\Snowman\Character.h"
+#include "..\Snowman\Object.h"
+#include "..\Snowman\Snowball.h"
 #include "..\Snowman\Connection.h"
 #include "SFML/Network.hpp"
+#include "SFML/Graphics.hpp"
 #include <map>
+#include <memory>
 
 class Server
 {
@@ -15,8 +19,8 @@ public:
 	void send_all_data();
 private:
 	sf::Packet load_all_data() const;
-	std::map<unsigned int, std::unique_ptr<Character>> data; // state of the all players connected to the server
-	std::map<unsigned short int, std::pair<sf::IpAddress, int>> clients; // store map<port, <ip, id>>
+	std::map<sf::Uint32, std::unique_ptr<Character>> data; // state of the all players connected to the server
+	std::map<sf::Uint32, std::pair<sf::IpAddress, unsigned short int>> clients; // store map<ID, <ip, port>>
 	sf::UdpSocket socket;
 	void send_id(const unsigned short int port, const sf::IpAddress ip);
 	void save_data(sf::Packet& packet);

@@ -6,6 +6,7 @@
 #include "Connection.h"
 #include <iostream>
 #include <thread>
+#include <map>
 
 class World
 {
@@ -14,6 +15,9 @@ public:
 	~World();
 	void start();
 private:
+	std::map<sf::Uint32, std::unique_ptr<Character>> enemies;
+	sf::Uint32 ID;
+	Connection connection;
 	sf::RenderWindow window;
 	sf::Event event;
 	sf::Clock clock;
