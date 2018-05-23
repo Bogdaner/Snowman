@@ -30,7 +30,7 @@ void Connection::send_data(Character* c)
 }
 
 
-void Connection::receive_data(Character& character)
+void Connection::receive_data(Character* character)
 {
 	socket.bind(sf::Socket::AnyPort);
 	socket.setBlocking(false);
@@ -41,7 +41,7 @@ void Connection::receive_data(Character& character)
 	if (socket.receive(packet, sender_adress, sender_port) != sf::Socket::Done)
 		return; // Error
 
-	packet >> character;
+	packet >> *character;
 }
 
 const unsigned short int Connection::server_port = 2000;
