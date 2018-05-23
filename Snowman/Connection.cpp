@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Connection.h"
+#include <iostream>
 
 
 sf::Packet& operator << (sf::Packet& packet, const Character& character)
@@ -27,7 +28,15 @@ sf::Uint32 Connection::ask_for_id()
 {
 	sf::Packet packet;
 	packet << sf::Uint8(Requests::ASK_FOR_ID);
-	sf::Uint32 id = socket.send(packet, server_ip, SERVER_PORT);
+	socket.send(packet, server_ip, SERVER_PORT);
+	sf::Uint32 id;
+
+	sf::IpAddress sender_adress;
+	unsigned short int sender_port;
+	if (socket.receive(packet, sender_adress, sender_port) != sf::Socket::Done)
+		return -1; // Error
+
+	packet >> id;
 	return id;
 }
 
@@ -54,6 +63,7 @@ void Connection::receive_data(std::map<sf::Uint32, std::unique_ptr<Character>>& 
 	{
 		sf::Uint32 received_ID;
 		packet >> received_ID;
+		std::cout << received_ID << std::endl;
 		if (received_ID == ID)
 			continue;
 

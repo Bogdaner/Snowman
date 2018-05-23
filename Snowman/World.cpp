@@ -66,6 +66,9 @@ void World::start()
 		window.setView(camera);
 		//Drawing
 		window.draw(map);
+
+		for (auto it = enemies.begin(); it != enemies.end(); it++)
+			window.draw(*it->second);
 		window.draw(player); 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++)				// nie mia³em pomys³u jak je rysowaæ xD
 			player.snowballs[i]->draw (window);									// trzeba jeszcze dorobic kolizje dla sniezek
