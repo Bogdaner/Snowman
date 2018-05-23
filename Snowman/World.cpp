@@ -3,7 +3,7 @@
 
 
 World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
-	camera{sf::Vector2f(0.0f, 0.0f), WINDOW_SIZE} // camera (plater position, screen size)
+	camera{sf::Vector2f(0.0f, 0.0f), WINDOW_SIZE} // camera (player position, screen size)
 {
 
 }
@@ -15,6 +15,9 @@ World::~World()
 
 void World::start()
 {
+
+	std::thread s(&Connection::send_data, &player);
+
 	while (window.isOpen())
 	{
 		delta_time = clock.restart().asSeconds();
@@ -22,11 +25,11 @@ void World::start()
 			delta_time = 1.0f / 20.0f;
 
 		//std::cout << 1.0f / delta_time << std::endl; // print fps
-
+		
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+				window.close();				
 		}
 
 
@@ -57,9 +60,6 @@ void World::start()
 				player.snowballs.erase(player.snowballs.begin () + i);
 		}			// mo¿na to pewnie ³adniej gdzieœ zrobic
 		
-		connection.send_data(player);
-		//connection.receive_data(player);
-
 		// Te metody na razie tu tymczasowo potem sie ogarnie jakos razem wszystkie
 		window.clear();
 		//Camera

@@ -5,6 +5,7 @@
 #include "Snowball.h"
 #include "Connection.h"
 #include <iostream>
+#include <thread>
 
 class World
 {
@@ -13,7 +14,6 @@ public:
 	~World();
 	void start();
 private:
-	Connection connection;
 	sf::RenderWindow window;
 	sf::Event event;
 	sf::Clock clock;
