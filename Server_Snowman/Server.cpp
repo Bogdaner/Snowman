@@ -1,12 +1,25 @@
 #include "stdafx.h"
 #include "Server.h"
 
+sf::Packet& operator << (sf::Packet& packet, const Character& character)
+{
+	return packet << character.getPosition().x << character.getPosition().y;
+}
+
+
+void operator >> (sf::Packet& packet, Character& character)
+{
+	sf::Vector2f pos;
+	packet >> pos.x >> pos.y;
+	character.sprite.setPosition(pos);
+}
+
 
 Server::Server()
 {
 	if (socket.bind(SERVER_PORT) != sf::Socket::Done)
 		throw CantBind;
-
+	//socket.setBlocking(false);
 }
 
 
@@ -59,7 +72,7 @@ sf::Packet Server::load_all_data() const
 		// id = it->second.second
 
 		packet << it->second.second;
-		//packet << data[it->second.second]; TO DO overload operator << for character
+		packet << *data.at(it->second.second); //TO DO overload operator << for character
 	}
 	return packet;
 }
@@ -79,9 +92,8 @@ void Server::save_data(sf::Packet& packet)
 {
 	int id;
 	packet >> id;
-	//packet >> data[id]; // TO DO overload operator << for character 
+	packet >> *data[id]; // TO DO overload operator << for character 
 }
-
 
 const short int Server::SERVER_PORT = 2000;
 
