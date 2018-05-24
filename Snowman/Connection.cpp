@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Connection.h"
 
-Connection::Connection()
+Connection::Connection() : exit{false}
 {
 	server_ip = sf::IpAddress::getLocalAddress();
 	socket.bind(sf::Socket::AnyPort);
 }
+
 
 sf::Uint32 Connection::ask_for_id()
 {
@@ -28,46 +29,54 @@ sf::Uint32 Connection::ask_for_id()
 	return id;
 }
 
-void Connection::send_data(Character* c, const sf::Uint32 ID)
+
+void Connection::send_data(Character& c, const sf::Uint32 ID)
 {
-	std::this_thread::sleep_for(std::chrono::milliseconds(3));
 	sf::Packet packet;
 	packet << sf::Uint8(Requests::STORE_DATA);
 	packet << ID;
-	packet << *c;
+	packet << c;
 	socket.send(packet, server_ip, SERVER_PORT);
 }
 
-void Connection::receive_data(std::map<sf::Uint32, std::unique_ptr<Character>>& enemies, const sf::Uint32 ID)
+
+sf::Packet Connection::get_last_packet()
 {
-	sf::IpAddress sender_adress;
-	unsigned short int sender_port;
-	sf::Packet packet;
-	if (socket.receive(packet, sender_adress, sender_port) != sf::Socket::Done)
-		return; // Error
+	std::lock_guard<std::mutex> lock(stack_mutex);
+	sf::Packet last = received_packets.top(); // get newest packet
+	received_packets = std::stack<sf::Packet>(); // clear stack
+	return last;
+}
 
-	sf::Uint32 size;
-	if(!(packet >> size)) return;
-	for (int i = 0; i < size; i++)
+
+void Connection::receive_data()
+{
+	while (exit == false)
 	{
-		sf::Uint32 received_ID;
-		packet >> received_ID;
-		if (received_ID == ID)
-		{
-			int tmp;
-			packet >> tmp >> tmp;
-			continue;
-		}
+		sf::IpAddress sender_adress;
+		unsigned short int sender_port;
+		sf::Packet packet;
+		if (socket.receive(packet, sender_adress, sender_port) != sf::Socket::Done)
+			continue; // Error
 
-		if (enemies.find(received_ID) == enemies.end())
-			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
-		
-		packet >> *enemies[received_ID];
+		std::lock_guard<std::mutex> lock(stack_mutex);
+		received_packets.push(packet);
 	}
 }
 
+
+bool Connection::is_queue_empty()
+{
+	return received_packets.empty();
+}
+
+
 const unsigned short int Connection::SERVER_PORT = 2000;
 
+std::mutex Connection::stack_mutex;
+
+
+// Functions for getting character info from packets etc. 
 sf::Packet& operator << (sf::Packet& packet, const Character& character)
 {
 	return packet << character.sprite.getPosition().x << character.sprite.getPosition().y;

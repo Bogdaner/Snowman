@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Server.h"
 
-Server::Server()
+Server::Server() : exit{false}
 {
 	if (socket.bind(SERVER_PORT) != sf::Socket::Done)
 		throw CantBind;
@@ -42,16 +42,12 @@ void Server::receive()
 
 void Server::send_all_data(const sf::Uint32 ID)
 {
-	while (true)
+	while (exit == false)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		sf::Packet packet;
 		load_all_data(packet);
 		socket.send(packet, clients.at(ID).first, clients.at(ID).second);
-		//for (auto it = clients.begin(); it != clients.end(); it++)
-		//{
-		//	socket.send(packet, it->second.first, it->second.second);
-		//}
 	}
 }
 
@@ -70,7 +66,7 @@ void Server::load_all_data(sf::Packet& packet) const
 		packet << sf::Uint32(it->first); // load ID
 		{
 			std::shared_lock<std::shared_mutex> lock(data_mutex);
-			packet << *data.at(it->first); //TO DO overload operator << for character
+			packet << *data.at(it->first);
 		}
 	}
 }
@@ -93,7 +89,7 @@ void Server::save_data(sf::Packet& packet)
 {
 	sf::Uint32 id;
 	packet >> id;
-	packet >> *data[id]; // TO DO overload operator << for character 
+	packet >> *data[id];
 }
 
 const short int Server::SERVER_PORT = 2000;

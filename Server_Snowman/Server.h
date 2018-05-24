@@ -8,6 +8,7 @@
 #include <thread>
 #include <mutex>
 #include <shared_mutex>
+#include <atomic>
 
 class Server
 {
@@ -16,6 +17,7 @@ public:
 	~Server();
 	void receive();
 	void send_all_data(const sf::Uint32 ID);
+	std::atomic<bool> exit;
 private:
 	void load_all_data(sf::Packet& packet) const;
 	std::map<sf::Uint32, std::unique_ptr<Character>> data; // state of the all players connected to the server

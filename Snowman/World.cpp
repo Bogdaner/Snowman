@@ -15,21 +15,28 @@ World::~World()
 
 void World::start()
 {
+	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
-		connection.receive_data(enemies, ID);
-		connection.send_data(&player, ID);
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+
+		connection.send_data(player, ID);
+		if (!connection.is_queue_empty())
+			update_enemies(connection.get_last_packet());
 
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
 
-		std::cout << 1.0f / delta_time << std::endl; // print fps
+		//std::cout << 1.0f / delta_time << std::endl; // print fps
 		
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();		
+			{
+				connection.exit = true;
+				window.close();
+			}
 		}
 
 		for (unsigned int i = 0; i < map.platforms.size(); i++)
@@ -51,6 +58,7 @@ void World::start()
 
 		//camera.setCenter(player.get_center_position());
 		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
+
 		player.shooting (window);													// metoda ze strzelaniem dla postaci 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++) {				// update œnie¿ek
 			player.snowballs[i]->update (GRAVITY, delta_time);
@@ -71,6 +79,28 @@ void World::start()
 			player.snowballs[i]->draw (window);									// trzeba jeszcze dorobic kolizje dla sniezek
 
 		window.display();
+	}
+	receiving.join();
+}
+
+void World::update_enemies(sf::Packet packet)
+{
+	sf::Uint32 size;
+	if (!(packet >> size)) return;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		sf::Uint32 received_ID;
+		packet >> received_ID;
+		if (received_ID == ID)
+		{
+			int tmp;
+			packet >> tmp >> tmp;
+			continue;
+		}
+		if (enemies.find(received_ID) == enemies.end())
+			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
+
+		packet >> *enemies[received_ID];
 	}
 }
 

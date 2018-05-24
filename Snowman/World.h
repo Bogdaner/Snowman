@@ -15,6 +15,7 @@ public:
 	~World();
 	void start();
 private:
+	void update_enemies(sf::Packet packet);
 	std::map<sf::Uint32, std::unique_ptr<Character>> enemies;
 	sf::Uint32 ID;
 	Connection connection;
