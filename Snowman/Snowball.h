@@ -15,8 +15,8 @@ public:
 		to_del
 	};
 	delete_steps delete_step;
-private:
 	float time_of_death;
+private:
 	static const float TIME_TO_ERASING;
 	sf::Texture texture;
 	void set_velocity (sf::Vector2f& dir, const float gravity, const float delta_time);

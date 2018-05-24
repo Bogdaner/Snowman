@@ -70,7 +70,15 @@ const unsigned short int Connection::SERVER_PORT = 2000;
 
 sf::Packet& operator << (sf::Packet& packet, const Character& character)
 {
-	return packet << character.sprite.getPosition().x << character.sprite.getPosition().y;
+	packet << character.sprite.getPosition().x << character.sprite.getPosition().y <<
+		(int)character.cur_animation << character.snowballs.size();
+	
+	for (auto it = character.snowballs.begin (); it != character.snowballs.end (); it++)
+		packet << (*it)->sprite.getPosition ().x << (*it)->sprite.getPosition ().y <<
+			(*it)->velocity.x << (*it)->velocity.y << (int)(*it)->delete_step <<
+			(*it)->time_of_death;
+
+	return packet;
 }
 
 
@@ -79,4 +87,18 @@ void operator >> (sf::Packet& packet, Character& character)
 	sf::Vector2f pos;
 	packet >> pos.x >> pos.y;
 	character.sprite.setPosition(pos);
+	int animation_dir;
+	packet >> animation_dir;
+	character.cur_animation = (Character::AnimationIndex)animation_dir;
+	int number_of_snowballs;
+	packet >> number_of_snowballs;
+
+	for (int i = 0; i < number_of_snowballs; i++)
+	{
+		character.snowballs.push_back (std::unique_ptr<Snowball> (new Snowball ({ 0.0f, 0.0f },
+			{ 0.0f, 0.0f }, { 25.0f,25.0f })));
+
+		packet >> pos.x >> pos.y;
+
+	}
 }

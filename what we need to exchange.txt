@@ -1,0 +1,8 @@
+things which we need to exchange between clients:
+- vector<snowballs>
+- player.position
+- animation: 
+	- left or right
+	- frame
+- player.hp
+- ?

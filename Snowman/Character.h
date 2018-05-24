@@ -15,18 +15,18 @@ public:
 	sf::Vector2f get_center_position() const;
 	void shooting (sf::RenderWindow& window);
 	std::vector<std::unique_ptr<Snowball>> snowballs;
-private:
-	bool can_shoot;
-	bool can_jump;
-	void set_velocity(sf::Vector2f& dir, const float gravity, const float delta_time);
 	enum class AnimationIndex
 	{
 		WalkingLeft,
 		WalkingRight,
 		Count
 	};
-	Animation animations[int (AnimationIndex::Count)];
 	AnimationIndex cur_animation;
+private:
+	bool can_shoot;
+	bool can_jump;
+	void set_velocity(sf::Vector2f& dir, const float gravity, const float delta_time);
+	Animation animations[int (AnimationIndex::Count)];
 	static const float STRENGTH;
 	static const float JUMP_HEIGHT;
 };
