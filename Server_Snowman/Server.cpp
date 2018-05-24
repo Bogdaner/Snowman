@@ -44,6 +44,7 @@ void Server::send_all_data(const sf::Uint32 ID)
 {
 	while (true)
 	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		sf::Packet packet;
 		load_all_data(packet);
 		socket.send(packet, clients.at(ID).first, clients.at(ID).second);
@@ -68,7 +69,7 @@ void Server::load_all_data(sf::Packet& packet) const
 		// port = it->second.second
 		packet << sf::Uint32(it->first); // load ID
 		{
-			std::lock_guard<std::mutex> lock(data_mutex);
+			std::shared_lock<std::shared_mutex> lock(data_mutex);
 			packet << *data.at(it->first); //TO DO overload operator << for character
 		}
 	}
@@ -77,12 +78,11 @@ void Server::load_all_data(sf::Packet& packet) const
 
 void Server::send_id(const unsigned short int port, const sf::IpAddress ip)
 {
-	std::lock_guard<std::mutex> lock(data_mutex);
-
 	clients[IDs] = std::make_pair(ip, port); // zapisanie klienta
 	sf::Packet p;
 	p << sf::Uint32(IDs);
 	socket.send(p, ip, port);
+	std::unique_lock<std::shared_mutex> lock(data_mutex);
 	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne itp te same co w
 	threads.push_back(std::thread(&Server::send_all_data, this, IDs));
 	IDs++;
@@ -104,4 +104,4 @@ const std::string Server::CantBind = "Cant bind a socket with specified port";
 
 const std::string Server::ReceiveError = "Error while receiving a packet";
 
-std::mutex Server::data_mutex;
+std::shared_mutex Server::data_mutex;

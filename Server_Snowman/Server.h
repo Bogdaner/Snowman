@@ -7,6 +7,7 @@
 #include <memory>
 #include <thread>
 #include <mutex>
+#include <shared_mutex>
 
 class Server
 {
@@ -27,7 +28,7 @@ private:
 	static const short int SERVER_PORT;
 	static const std::string CantBind;
 	static const std::string ReceiveError;
-	static std::mutex data_mutex;
+	static std::shared_mutex data_mutex;
 protected:
 };
 

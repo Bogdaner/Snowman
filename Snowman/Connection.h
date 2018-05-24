@@ -2,6 +2,8 @@
 #include "Character.h"
 #include "..\Server_Snowman\Requests.h"
 #include "SFML/Network.hpp"
+#include <thread>
+#include <chrono>
 
 class Connection
 {

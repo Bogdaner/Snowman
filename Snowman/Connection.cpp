@@ -30,6 +30,7 @@ sf::Uint32 Connection::ask_for_id()
 
 void Connection::send_data(Character* c, const sf::Uint32 ID)
 {
+	std::this_thread::sleep_for(std::chrono::milliseconds(3));
 	sf::Packet packet;
 	packet << sf::Uint8(Requests::STORE_DATA);
 	packet << ID;
