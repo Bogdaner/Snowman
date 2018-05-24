@@ -1,20 +1,6 @@
 #include "stdafx.h"
 #include "Server.h"
 
-sf::Packet& operator << (sf::Packet& packet, const Character& character)
-{
-	return packet << character.sprite.getPosition().x << character.sprite.getPosition().y;
-}
-
-
-void operator >> (sf::Packet& packet, Character& character)
-{
-	sf::Vector2f pos;
-	packet >> pos.x >> pos.y;
-	character.sprite.setPosition(pos);
-}
-
-
 Server::Server()
 {
 	if (socket.bind(SERVER_PORT) != sf::Socket::Done)
@@ -35,7 +21,7 @@ void Server::receive()
 	sf::IpAddress sender_ip;
 	unsigned short sender_port;
 	if (socket.receive(packet, sender_ip, sender_port) != sf::Socket::Done)
-		throw ReceiveError;
+		return;//throw ReceiveError;
 
 	sf::Uint8 request;
 	if (packet >> request)
@@ -54,41 +40,51 @@ void Server::receive()
 	}
 }
 
-void Server::send_all_data()
+void Server::send_all_data(const sf::Uint32 ID)
 {
-	sf::Packet packet = load_all_data();
-	for (auto it = clients.begin(); it != clients.end(); it++)
+	while (true)
 	{
-		socket.send(packet, it->second.first, it->second.second);
+		sf::Packet packet;
+		load_all_data(packet);
+		socket.send(packet, clients.at(ID).first, clients.at(ID).second);
+		//for (auto it = clients.begin(); it != clients.end(); it++)
+		//{
+		//	socket.send(packet, it->second.first, it->second.second);
+		//}
 	}
 }
 
 
-sf::Packet Server::load_all_data() const
+void Server::load_all_data(sf::Packet& packet) const
 {
-	sf::Packet packet;
 	sf::Uint32 size = data.size();
+	if (size <= 0)
+		return;
 	packet << size;
 	for (auto it = clients.begin(); it != clients.end(); it++)	//petla po wszystkich klientach
 	{
 		// ID = it->first
 		// ip = it->second.first
 		// port = it->second.second
-
 		packet << sf::Uint32(it->first); // load ID
-		packet << *data.at(it->first); //TO DO overload operator << for character
+		{
+			std::lock_guard<std::mutex> lock(data_mutex);
+			packet << *data.at(it->first); //TO DO overload operator << for character
+		}
 	}
-	return packet;
 }
 
 
 void Server::send_id(const unsigned short int port, const sf::IpAddress ip)
 {
+	std::lock_guard<std::mutex> lock(data_mutex);
+
 	clients[IDs] = std::make_pair(ip, port); // zapisanie klienta
 	sf::Packet p;
 	p << sf::Uint32(IDs);
 	socket.send(p, ip, port);
 	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne itp te same co w
+	threads.push_back(std::thread(&Server::send_all_data, this, IDs));
 	IDs++;
 }
 
@@ -102,8 +98,10 @@ void Server::save_data(sf::Packet& packet)
 
 const short int Server::SERVER_PORT = 2000;
 
-unsigned int Server::IDs = 0;
+unsigned int Server::IDs = 1;
 
 const std::string Server::CantBind = "Cant bind a socket with specified port";
 
 const std::string Server::ReceiveError = "Error while receiving a packet";
+
+std::mutex Server::data_mutex;

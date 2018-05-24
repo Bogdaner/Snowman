@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\FilesFromSnowman">
+      <UniqueIdentifier>{a9d991e6-1390-43ec-83d9-ffe30fa35dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -38,23 +41,26 @@
     <ClCompile Include="Requests.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Snowman\Character.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Snowman\Animation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\FilesFromSnowman</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Snowman\Character.cpp">
+      <Filter>Source Files\FilesFromSnowman</Filter>
     </ClCompile>
     <ClCompile Include="..\Snowman\Collider.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\FilesFromSnowman</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Snowman\Connection.cpp">
+      <Filter>Source Files\FilesFromSnowman</Filter>
     </ClCompile>
     <ClCompile Include="..\Snowman\Object.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\FilesFromSnowman</Filter>
     </ClCompile>
     <ClCompile Include="..\Snowman\Platform.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\FilesFromSnowman</Filter>
     </ClCompile>
     <ClCompile Include="..\Snowman\Snowball.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\FilesFromSnowman</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -161,6 +161,7 @@
     <ClCompile Include="..\Snowman\Animation.cpp" />
     <ClCompile Include="..\Snowman\Character.cpp" />
     <ClCompile Include="..\Snowman\Collider.cpp" />
+    <ClCompile Include="..\Snowman\Connection.cpp" />
     <ClCompile Include="..\Snowman\Object.cpp" />
     <ClCompile Include="..\Snowman\Platform.cpp" />
     <ClCompile Include="..\Snowman\Snowball.cpp" />

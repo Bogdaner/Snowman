@@ -17,21 +17,20 @@ void World::start()
 {
 	while (window.isOpen())
 	{
-		connection.send_data(&player, ID);
 		connection.receive_data(enemies, ID);
+		connection.send_data(&player, ID);
 
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
 
-		//std::cout << 1.0f / delta_time << std::endl; // print fps
+		std::cout << 1.0f / delta_time << std::endl; // print fps
 		
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();				
+				window.close();		
 		}
-
 
 		for (unsigned int i = 0; i < map.platforms.size(); i++)
 		{
@@ -50,23 +49,22 @@ void World::start()
 		}
 		player.update(GRAVITY, delta_time);
 
+
 		//camera.setCenter(player.get_center_position());
 		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
-
 		player.shooting (window);													// metoda ze strzelaniem dla postaci 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++) {				// update œnie¿ek
 			player.snowballs[i]->update (GRAVITY, delta_time);
 			if(player.snowballs[i]->delete_step == Snowball::delete_steps::to_del)
 				player.snowballs.erase(player.snowballs.begin () + i);
 		}			// mo¿na to pewnie ³adniej gdzieœ zrobic
-		
+
 		// Te metody na razie tu tymczasowo potem sie ogarnie jakos razem wszystkie
 		window.clear();
 		//Camera
 		window.setView(camera);
 		//Drawing
 		window.draw(map);
-
 		for (auto it = enemies.begin(); it != enemies.end(); it++)
 			window.draw(*it->second);
 		window.draw(player); 

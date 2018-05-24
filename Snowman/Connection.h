@@ -14,9 +14,10 @@ private:
 	sf::UdpSocket socket;
 	sf::IpAddress server_ip;
 	static const unsigned short int SERVER_PORT;
-
-	friend sf::Packet& operator << (sf::Packet& packet, const Character& character);
-	friend void operator >> (sf::Packet& packet, Character& character);
 protected:
 };
 
+
+sf::Packet& operator << (sf::Packet& packet, const Character& character);
+
+void operator >> (sf::Packet& packet, Character& character);
