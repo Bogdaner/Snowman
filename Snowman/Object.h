@@ -12,12 +12,12 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	Collider collider;   // collider jako zmienna w obiekcie
 	sf::RectangleShape sprite; // znowu na razie public albo juz zostanie public zobaczy sie ;s
+	sf::Vector2f velocity;
 private:
 
 protected:
 	sf::Vector2f direction;
 	sf::Vector2f size;
-	sf::Vector2f velocity;
 	static const float WEIGHT;
 	static const float SPEED;
 };

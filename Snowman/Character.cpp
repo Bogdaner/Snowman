@@ -77,7 +77,7 @@ void Character::shooting(sf::RenderWindow& window)
 		float relmax = abs (rely) + abs (relx);
 		relx = relx / relmax;
 		rely = rely / relmax;
-		snowballs.push_back (std::unique_ptr<Snowball> (new Snowball ({ relx * STRENGTH, rely * STRENGTH },
+		snowballs.push_back (std::shared_ptr<Snowball> (new Snowball ({ relx * STRENGTH, rely * STRENGTH },
 			{ sprite.getPosition().x, sprite.getPosition().y}, { 25.0f,25.0f })));
 	}
 	else if (!sf::Mouse::isButtonPressed (sf::Mouse::Button::Left)) {				// ¿eby jeden klik == jeden strza³ 

@@ -1,8 +1,8 @@
 #pragma once
 #include "SFML/Network.hpp"
 #include "Requests.h"
-#include "Character.h"
-#include "Connection.h"
+#include "../Snowman/Character.h"
+#include "../Snowman/Connection.h"
 #include <map>
 #include <memory>
 #include <thread>

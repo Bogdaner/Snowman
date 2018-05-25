@@ -5,6 +5,8 @@
 Snowball::Snowball (const sf::Vector2f& dir, const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object (position, size)
 {
+	id = count;
+	count++;
 	delete_step = delete_steps::no_collision;
 	time_of_death = 0;
 	direction = dir;
@@ -47,4 +49,5 @@ void Snowball::draw (sf::RenderTarget& target) const
 	target.draw (sprite);
 }
 
+int Snowball::count = 0;
 const float Snowball::TIME_TO_ERASING = 0.05f;
