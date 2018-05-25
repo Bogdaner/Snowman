@@ -1,10 +1,11 @@
-#include "stdafx.h"
+	#include "stdafx.h"
 #include "Snowball.h"
 
 
-Snowball::Snowball (const sf::Vector2f& dir, const sf::Vector2f& position, const sf::Vector2f& size)
+Snowball::Snowball (const sf::Vector2f& dir, const sf::Vector2f& position, const sf::Vector2f& size, int count)
 	:Object (position, size)
 {
+	id = count;
 	delete_step = delete_steps::no_collision;
 	time_of_death = 0;
 	direction = dir;

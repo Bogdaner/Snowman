@@ -24,7 +24,8 @@ void World::start()
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
 
-		std::cout << 1.0f / delta_time << std::endl; // print fps
+		//std::cout << 1.0f / delta_time << std::endl; // print fps
+
 		
 		while (window.pollEvent(event))
 		{
@@ -54,6 +55,7 @@ void World::start()
 		player.shooting (window);													// metoda ze strzelaniem dla postaci 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++) {				// update œnie¿ek
 			player.snowballs[i]->update (GRAVITY, delta_time);
+			std::cout << player.snowballs.size () << std::endl;
 			if(player.snowballs[i]->delete_step == Snowball::delete_steps::to_del)
 				player.snowballs.erase(player.snowballs.begin () + i);
 		}			// mo¿na to pewnie ³adniej gdzieœ zrobic
@@ -64,8 +66,29 @@ void World::start()
 		window.setView(camera);
 		//Drawing
 		window.draw(map);
-		for (auto it = enemies.begin(); it != enemies.end(); it++)
-			window.draw(*it->second);
+		for (auto it = enemies.begin (); it != enemies.end (); it++) {
+			for (unsigned int i = 0; i < map.platforms.size (); i++)
+			{
+				for (unsigned int j = 0; j < (*it->second).snowballs.size (); j++)
+					if (map.platforms[i]->collider.check_collision ((*it->second).snowballs[j]->collider, (*it->second).snowballs[j]->collison_dir, 1.0f)) {
+						(*it->second).snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
+																//player.snowballs.erase (player.snowballs.begin () + j);
+					}
+			}
+			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++) {				// update œnie¿ek
+				(*it->second).snowballs[i]->update (GRAVITY, delta_time);
+				if ((*it->second).snowballs[i]->delete_step == Snowball::delete_steps::to_del)
+				{
+					(*it->second).last_deleted_snowball = (*it->second).snowballs.at (i)->id;
+					(*it->second).snowballs.erase ((*it->second).snowballs.begin () + i);
+					
+				}
+			}
+
+			window.draw (*it->second);
+			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++)
+				(*it->second).snowballs[i]->draw (window);
+		}
 		window.draw(player); 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++)				// nie mia³em pomys³u jak je rysowaæ xD
 			player.snowballs[i]->draw (window);									// trzeba jeszcze dorobic kolizje dla sniezek

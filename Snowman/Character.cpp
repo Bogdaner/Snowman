@@ -5,6 +5,7 @@
 Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object(position, size)
 {
+	snowballs_count = 0;
 	cur_animation = AnimationIndex::WalkingRight;
 	animations[int (AnimationIndex::WalkingLeft)] = Animation (int (AnimationIndex::WalkingLeft));
 	animations[int (AnimationIndex::WalkingRight)] = Animation (int (AnimationIndex::WalkingRight));
@@ -77,8 +78,9 @@ void Character::shooting(sf::RenderWindow& window)
 		float relmax = abs (rely) + abs (relx);
 		relx = relx / relmax;
 		rely = rely / relmax;
-		snowballs.push_back (std::unique_ptr<Snowball> (new Snowball ({ relx * STRENGTH, rely * STRENGTH },
-			{ sprite.getPosition().x, sprite.getPosition().y}, { 25.0f,25.0f })));
+		snowballs.push_back (std::shared_ptr<Snowball> (new Snowball ({ relx * STRENGTH, rely * STRENGTH },
+			{ sprite.getPosition().x, sprite.getPosition().y}, { 25.0f,25.0f }, snowballs_count)));
+		snowballs_count++;
 	}
 	else if (!sf::Mouse::isButtonPressed (sf::Mouse::Button::Left)) {				// ¿eby jeden klik == jeden strza³ 
 		can_shoot = false;

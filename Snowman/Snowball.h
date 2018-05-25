@@ -4,7 +4,7 @@ class Snowball :
 	public Object
 {
 public:
-	Snowball (const sf::Vector2f& direction, const sf::Vector2f& position, const sf::Vector2f& size);
+	Snowball (const sf::Vector2f& direction, const sf::Vector2f& position, const sf::Vector2f& size, int count);
 	void update (const float gravity, const float delta_time) override;
 	CollisionDir collison_dir;
 	void on_collision ();
@@ -16,6 +16,7 @@ public:
 	};
 	delete_steps delete_step;
 	float time_of_death;
+	int id;
 private:
 	static const float TIME_TO_ERASING;
 	sf::Texture texture;

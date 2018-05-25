@@ -4,6 +4,7 @@
 #include "SFML/Network.hpp"
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 class Connection
 {
