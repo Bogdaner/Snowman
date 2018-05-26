@@ -18,6 +18,7 @@ void World::start()
 	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
 		connection.send_data(player, ID);
@@ -27,6 +28,32 @@ void World::start()
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
+
+		if (player.hp <= 0)
+		{
+			sf::Texture t;
+			t.loadFromFile ("textures/defeat.jpg");
+			sf::RectangleShape s;
+			s.setSize (WINDOW_SIZE);
+			s.setOrigin ({ 0.0f,0.0f });
+			s.setPosition (player.sprite.getPosition () - (WINDOW_SIZE / 2.0f));
+			s.setTexture (&t);
+			window.clear ();
+			window.draw (s);
+			window.display ();
+			while (1)
+			{
+				while (window.pollEvent (event))
+				{
+					if (event.type == sf::Event::Closed)
+					{
+						connection.exit = true;
+						window.close ();
+					}
+				}
+			}
+		}
+		
 
 		//std::cout << 1.0f / delta_time << std::endl; // print fps
 		
@@ -73,6 +100,45 @@ void World::start()
 		//Drawing
 		window.draw(map);
 		for (auto it = enemies.begin (); it != enemies.end (); it++) {
+			if ((*it->second).hp <= 0)
+			{
+				sf::Texture t;
+				t.loadFromFile ("textures/victory.jpg");
+				sf::RectangleShape s;
+				s.setSize (WINDOW_SIZE);
+				s.setOrigin ({ 0.0f,0.0f });
+				s.setPosition (player.sprite.getPosition () - (WINDOW_SIZE / 2.0f));
+				s.setTexture (&t);
+				window.clear ();
+				window.draw (s);
+				window.display ();
+				while (1)
+				{
+					while (window.pollEvent (event))
+					{
+						if (event.type == sf::Event::Closed)
+						{
+							connection.exit = true;
+							window.close ();
+						}
+					}
+				}
+			}
+			for (unsigned int i = 0; i < player.snowballs.size (); i++)
+			{
+				if ((*it->second).collider.check_collision (player.snowballs[i]->collider, player.snowballs[i]->collison_dir, 1.0f))
+				{
+					player.snowballs[i]->on_collision ();
+				}
+			}
+			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++)
+			{
+				if (player.collider.check_collision ((*it->second).snowballs[i]->collider, (*it->second).snowballs[i]->collison_dir, 1.0f))
+				{
+					(*it->second).snowballs[i]->on_collision ();
+					player.hp -= 10;
+				}
+			}
 			(*it->second).animations[int ((*it->second).cur_animation)].set_sprite ((*it->second).sprite, (*it->second).is_moving);
 			for (unsigned int i = 0; i < map.platforms.size (); i++)
 			{
