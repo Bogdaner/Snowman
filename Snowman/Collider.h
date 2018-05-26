@@ -13,13 +13,14 @@ enum CollisionDir
 class Collider
 {
 public:
-	Collider(sf::RectangleShape& body);
+	Collider() = default;
+	Collider(sf::RectangleShape* body);
 	~Collider();
 	void move(const float dx, const float dy);
 	bool check_collision(Collider& other, CollisionDir& dir, float push);
 	sf::Vector2f get_position() const;
 	sf::Vector2f get_half_size() const;
 private:
-	sf::RectangleShape& body;
+	sf::RectangleShape* body;
 };
 

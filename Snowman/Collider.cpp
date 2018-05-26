@@ -2,7 +2,7 @@
 #include "Collider.h"
 
 
-Collider::Collider(sf::RectangleShape& body) : body{body}
+Collider::Collider(sf::RectangleShape* body) : body{body}
 {
 
 }
@@ -15,7 +15,7 @@ Collider::~Collider()
 
 void Collider::move(const float dx, const float dy)
 {
-	body.move(dx, dy);
+	body->move(dx, dy);
 }
 
 bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
@@ -72,10 +72,10 @@ bool Collider::check_collision(Collider& other, CollisionDir& dir, float push)
 
 sf::Vector2f Collider::get_position() const
 {
-	return body.getPosition();
+	return body->getPosition();
 }
 
 sf::Vector2f Collider::get_half_size() const
 {
-	return body.getSize() / 2.0f;
+	return body->getSize() / 2.0f;
 }

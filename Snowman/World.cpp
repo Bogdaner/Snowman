@@ -113,13 +113,8 @@ void World::update_enemies(sf::Packet packet)
 		packet >> received_ID;
 		if (received_ID == ID)
 		{
-			int tmp;
-			bool tmpb;
-			int count;
-			packet >> tmp >> tmp >> tmp >> tmpb >> tmp;
-			packet >> count;
-			if (count > 0)
-				packet >> tmp >> tmp >> tmp >> tmp >> tmp;
+			Character dummy;
+			packet >> dummy;
 			continue;
 		}
 		if (enemies.find(received_ID) == enemies.end())
