@@ -39,6 +39,14 @@ void Connection::send_data(Character& c, const sf::Uint32 ID)
 	socket.send(packet, server_ip, SERVER_PORT);
 }
 
+void Connection::disconnect(const sf::Uint32 ID)
+{
+	sf::Packet packet;
+	packet << sf::Uint8(Requests::DISCONNECT);
+	packet << ID;
+	socket.send(packet, server_ip, SERVER_PORT);
+}
+
 
 sf::Packet Connection::get_last_packet()
 {

@@ -18,7 +18,7 @@ void World::start()
 	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(0));
 
 		connection.send_data(player, ID);
 		if (!connection.is_queue_empty())
@@ -27,13 +27,11 @@ void World::start()
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
+
 		
 		while (window.pollEvent(event))
 			if (event.type == sf::Event::Closed)
-			{
-				connection.exit = true;
 				window.close();
-			}
 
 		camera.setCenter((int)player.get_center_position().x, 
 			(int)player.get_center_position().y);
@@ -65,6 +63,9 @@ void World::game_end (game_stage gs)
 	window.clear ();
 	window.draw (s);
 	window.display ();
+
+	connection.disconnect(ID); // wysyla rzadanie na server, server przestaje sledzic klienta
+	connection.exit = true; // przerywa odbieranie pakietow od serwera
 
 	std::this_thread::sleep_for (std::chrono::milliseconds (5000));
 	window.close ();				// zamyka okno po 5 sek od koñca gry 
@@ -145,6 +146,7 @@ void World::player_loop ()
 
 void World::update_enemies(sf::Packet packet)
 {
+	std::vector<sf::Uint32> ids;
 	sf::Uint32 size;
 	if (!(packet >> size)) return;
 	for (unsigned int i = 0; i < size; i++)
@@ -157,11 +159,31 @@ void World::update_enemies(sf::Packet packet)
 			packet >> dummy;
 			continue;
 		}
+		else
+			ids.push_back(received_ID);
 		if (enemies.find(received_ID) == enemies.end())
 			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
 
 		packet >> *enemies[received_ID];
 	}
+
+	std::vector<sf::Uint32> to_remove;
+	if (ids.size() < enemies.size())
+	{
+		for (auto it = enemies.begin(); it != enemies.end(); it++)
+		{
+			bool rm = true;
+			for (sf::Uint32 id : ids)
+			{
+				if (it->first == id)
+					rm = false;
+			}
+			if (rm)
+				to_remove.push_back(it->first);
+		}
+	}
+	for (sf::Uint32 id : to_remove)
+		enemies.erase(id);
 }
 
 const sf::Vector2f World::WINDOW_SIZE(1280, 720);
