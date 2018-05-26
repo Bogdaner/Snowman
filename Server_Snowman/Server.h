@@ -24,7 +24,7 @@ private:
 	std::map<sf::Uint32, std::pair<sf::IpAddress, unsigned short int>> clients; // store map<ID, <ip, port>>
 	void client_disconnect(const sf::Uint32 ID);
 	std::map<sf::Uint32, std::atomic<bool>> active_threads;
-	std::vector<std::thread> threads;
+	std::map<sf::Uint32, std::thread> threads;
 	sf::UdpSocket socket;
 	void send_id(const unsigned short int port, const sf::IpAddress ip);
 	void save_data(sf::Packet& packet);

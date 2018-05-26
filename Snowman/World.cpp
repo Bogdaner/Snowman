@@ -18,7 +18,7 @@ void World::start()
 	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(0));
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
 		connection.send_data(player, ID);
 		if (!connection.is_queue_empty())
@@ -42,6 +42,8 @@ void World::start()
 		player_loop ();
 		window.display();
 	}
+	connection.disconnect(ID); // wysyla rzadanie na server, server przestaje sledzic klienta
+	connection.exit = true; // przerywa odbieranie pakietow od serwera
 	receiving.join();
 }
 
@@ -64,9 +66,6 @@ void World::game_end (game_stage gs)
 	window.draw (s);
 	window.display ();
 
-	connection.disconnect(ID); // wysyla rzadanie na server, server przestaje sledzic klienta
-	connection.exit = true; // przerywa odbieranie pakietow od serwera
-
 	std::this_thread::sleep_for (std::chrono::milliseconds (5000));
 	window.close ();				// zamyka okno po 5 sek od koñca gry 
 }
@@ -86,8 +85,9 @@ void World::enemy_loop ()
 		{
 			if (player.collider.check_collision ((*it->second).snowballs[i]->collider, (*it->second).snowballs[i]->collison_dir, 1.0f))
 			{
-				(*it->second).snowballs[i]->on_collision ();
-				player.hp -= 10;									// jesli kolizja ze sniezka -> odejmujemy 10 hp graczowi
+				if ((*it->second).snowballs[i]->delete_step == Snowball::delete_steps::no_collision)
+					player.hp -= 10;                                    // jesli kolizja ze sniezka -> odejmujemy 10 hp graczowi
+				(*it->second).snowballs[i]->on_collision();
 			}
 
 			(*it->second).snowballs[i]->update (GRAVITY, delta_time);

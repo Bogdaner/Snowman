@@ -82,9 +82,10 @@ void Server::client_disconnect(const sf::Uint32 ID)
 	active_threads[ID] = false;
 	std::unique_lock<std::shared_mutex> lock(clients_mutex);
 
+
 	threads[ID].join();
+	threads.erase(ID);
 	IDs--;
-	threads.erase(threads.begin() + (int)ID);
 
 	active_threads.erase(ID);
 	clients.erase(ID);
@@ -101,7 +102,7 @@ void Server::send_id(const unsigned short int port, const sf::IpAddress ip)
 	std::unique_lock<std::shared_mutex> lock(data_mutex);
 	active_threads[IDs] = true;
 	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne itp te same co w
-	threads.push_back(std::thread(&Server::send_all_data, this, IDs));
+	threads[IDs] = (std::thread(&Server::send_all_data, this, IDs));
 	IDs++;
 }
 
