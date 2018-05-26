@@ -5,6 +5,7 @@
 Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object(position, size)
 {
+	hp = 100;
 	is_moving = false;
 	cur_animation = AnimationIndex::WalkingRight;
 	animations[int (AnimationIndex::WalkingLeft)] = Animation (int (AnimationIndex::WalkingLeft));

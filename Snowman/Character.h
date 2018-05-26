@@ -24,6 +24,7 @@ public:
 	};
 	AnimationIndex cur_animation;
 	Animation animations[int (AnimationIndex::Count)];
+	int hp;
 	int last_deleted_snowball;     // Temporary! or maybe not... 
 private:
 	bool can_shoot;

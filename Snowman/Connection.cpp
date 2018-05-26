@@ -108,6 +108,7 @@ void Connection::load_snowballs (sf::Packet& packet, Character& character)
 
 void Connection::load_character (sf::Packet& packet, Character& character)
 {
+	int hp;
 	int frame;
 	int animation_dir;
 	int number_of_snowballs;
@@ -115,7 +116,9 @@ void Connection::load_character (sf::Packet& packet, Character& character)
 	sf::Vector2f pos;
 
 	packet >> pos.x >> pos.y;
+	packet >> hp;
 	character.sprite.setPosition (pos);
+	character.hp = hp;
 
 	packet >> animation_dir;
 	packet >> is_moving;
@@ -140,7 +143,7 @@ void Connection::pack_snowballs (sf::Packet& packet, const Character& character)
 void Connection::pack_character (sf::Packet& packet, const Character& character)
 {
 	packet << character.sprite.getPosition ().x << character.sprite.getPosition ().y <<
-		(int)character.cur_animation << character.is_moving <<
+		character.hp << (int)character.cur_animation << character.is_moving <<
 		character.animations[(int)character.cur_animation].frame << character.snowballs.size ();
 
 	if (character.snowballs.size () > 0)
