@@ -18,7 +18,7 @@ void World::start()
 	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(0));
 
 		connection.send_data(player, ID);
 		if (!connection.is_queue_empty())
@@ -28,7 +28,7 @@ void World::start()
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
 
-		//std::cout << 1.0f / delta_time << std::endl; // print fps
+		std::cout << 1.0f / delta_time << std::endl; // print fps
 		
 		while (window.pollEvent(event))
 		{
@@ -99,6 +99,7 @@ void World::start()
 
 void World::update_enemies(sf::Packet packet)
 {
+	std::vector<sf::Uint32> ids;
 	sf::Uint32 size;
 	if (!(packet >> size)) return;
 	for (unsigned int i = 0; i < size; i++)
@@ -111,11 +112,31 @@ void World::update_enemies(sf::Packet packet)
 			packet >> dummy;
 			continue;
 		}
+		else
+			ids.push_back(received_ID);
 		if (enemies.find(received_ID) == enemies.end())
 			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
 
 		packet >> *enemies[received_ID];
 	}
+
+	std::vector<sf::Uint32> to_remove;
+	if (ids.size() < enemies.size())
+	{
+		for (auto it = enemies.begin(); it != enemies.end(); it++)
+		{
+			bool rm = true;
+			for (sf::Uint32 id : ids)
+			{
+				if (it->first == id)
+					rm = false;
+			}
+			if (rm)
+				to_remove.push_back(it->first);
+		}
+	}
+	for (sf::Uint32 id : to_remove)
+		enemies.erase(id);
 }
 
 const sf::Vector2f World::WINDOW_SIZE(1280, 720);
