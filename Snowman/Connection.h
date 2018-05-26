@@ -13,6 +13,7 @@ public:
 	Connection();
 	sf::Uint32 ask_for_id();
 	void send_data(Character& c, const sf::Uint32 ID);
+	void disconnect(const sf::Uint32 ID);
 	sf::Packet get_last_packet();
 	static void load_snowballs (sf::Packet& packet, Character& character);
 	static void load_character (sf::Packet& packet, Character& character);

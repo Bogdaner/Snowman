@@ -5,4 +5,6 @@ enum Requests
 {
 	ASK_FOR_ID,
 	STORE_DATA,
+	DISCONNECT,
+
 };

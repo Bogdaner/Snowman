@@ -35,6 +35,11 @@ void Server::receive()
 		case Requests::STORE_DATA:
 			save_data(packet);
 			break;
+		case Requests::DISCONNECT:
+			sf::Uint32 ID;
+			packet >> ID;
+			client_disconnect(ID);
+			break;
 		default:
 			break;
 		}
@@ -43,8 +48,9 @@ void Server::receive()
 
 void Server::send_all_data(const sf::Uint32 ID)
 {
-	while (exit == false)
+	while (active_threads[ID])
 	{
+		std::shared_lock<std::shared_mutex> lock(clients_mutex);
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		sf::Packet packet;
 		load_all_data(packet);
@@ -64,12 +70,25 @@ void Server::load_all_data(sf::Packet& packet) const
 		// ID = it->first
 		// ip = it->second.first
 		// port = it->second.second
-		packet << sf::Uint32(it->first); // load ID
-		{
-			std::shared_lock<std::shared_mutex> lock(data_mutex);
-			packet << *data.at(it->first);
-		}
+		packet << sf::Uint32(it->first); // load ID	
+
+		std::shared_lock<std::shared_mutex> lock(data_mutex);
+		packet << *data.at(it->first);
 	}
+}
+
+void Server::client_disconnect(const sf::Uint32 ID)
+{
+	active_threads[ID] = false;
+	std::unique_lock<std::shared_mutex> lock(clients_mutex);
+
+	threads[ID].join();
+	IDs--;
+	threads.erase(threads.begin() + (int)ID);
+
+	active_threads.erase(ID);
+	clients.erase(ID);
+	data.erase(ID);
 }
 
 
@@ -80,6 +99,7 @@ void Server::send_id(const unsigned short int port, const sf::IpAddress ip)
 	p << sf::Uint32(IDs);
 	socket.send(p, ip, port);
 	std::unique_lock<std::shared_mutex> lock(data_mutex);
+	active_threads[IDs] = true;
 	data[IDs] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)); // na razie tak z dupy wspolrzedne itp te same co w
 	threads.push_back(std::thread(&Server::send_all_data, this, IDs));
 	IDs++;
@@ -95,10 +115,12 @@ void Server::save_data(sf::Packet& packet)
 
 const short int Server::SERVER_PORT = 2000;
 
-unsigned int Server::IDs = 1;
+unsigned int Server::IDs = 0;
 
 const std::string Server::CantBind = "Cant bind a socket with specified port";
 
 const std::string Server::ReceiveError = "Error while receiving a packet";
 
 std::shared_mutex Server::data_mutex;
+
+std::shared_mutex Server::clients_mutex;

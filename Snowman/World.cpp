@@ -33,16 +33,9 @@ void World::start()
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-			{
-				connection.exit = true;
 				window.close();
-			}
 		}
 
-		for (unsigned int i = 0; i < map.platforms.size(); i++)
-		{
-			map.platforms[i]->update(GRAVITY, delta_time);
-		}	
 		for (unsigned int i = 0; i < map.platforms.size(); i++)
 		{
 			if (map.platforms[i]->collider.check_collision(player.collider, player.collison_dir, 1.0f))
@@ -50,8 +43,7 @@ void World::start()
 
 			for (unsigned int j = 0; j < player.snowballs.size(); j++)			
 				if (map.platforms[i]->collider.check_collision (player.snowballs[j]->collider, player.snowballs[j]->collison_dir, 1.0f)) {
-					player.snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
-															//player.snowballs.erase (player.snowballs.begin () + j);
+					player.snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami															//player.snowballs.erase (player.snowballs.begin () + j);
 				}
 		}
 		player.update(GRAVITY, delta_time);
@@ -100,6 +92,8 @@ void World::start()
 
 		window.display();
 	}
+	connection.disconnect(ID);
+	connection.exit = true;
 	receiving.join();
 }
 
