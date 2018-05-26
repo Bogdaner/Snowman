@@ -115,9 +115,6 @@ void World::player_loop ()
 		game_end (game_stage::defeat);
 
 	for (unsigned int i = 0; i < map.platforms.size (); i++)
-		map.platforms[i]->update (GRAVITY, delta_time);
-
-	for (unsigned int i = 0; i < map.platforms.size (); i++)
 	{
 		if (map.platforms[i]->collider.check_collision (player.collider, player.collison_dir, 1.0f))
 			player.on_collision ();
