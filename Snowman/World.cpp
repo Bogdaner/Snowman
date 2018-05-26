@@ -18,7 +18,6 @@ void World::start()
 	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
-
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
 		connection.send_data(player, ID);
@@ -28,145 +27,123 @@ void World::start()
 		delta_time = clock.restart().asSeconds();
 		if (delta_time > 1.0f / 20.0f)
 			delta_time = 1.0f / 20.0f;
-
-		if (player.hp <= 0)
-		{
-			sf::Texture t;
-			t.loadFromFile ("textures/defeat.jpg");
-			sf::RectangleShape s;
-			s.setSize (WINDOW_SIZE);
-			s.setOrigin ({ 0.0f,0.0f });
-			s.setPosition (player.sprite.getPosition () - (WINDOW_SIZE / 2.0f));
-			s.setTexture (&t);
-			window.clear ();
-			window.draw (s);
-			window.display ();
-			while (1)
-			{
-				while (window.pollEvent (event))
-				{
-					if (event.type == sf::Event::Closed)
-					{
-						connection.exit = true;
-						window.close ();
-					}
-				}
-			}
-		}
-		
-
-		//std::cout << 1.0f / delta_time << std::endl; // print fps
 		
 		while (window.pollEvent(event))
-		{
 			if (event.type == sf::Event::Closed)
 			{
 				connection.exit = true;
 				window.close();
 			}
-		}
 
-		for (unsigned int i = 0; i < map.platforms.size(); i++)
-		{
-			map.platforms[i]->update(GRAVITY, delta_time);
-		}	
-		for (unsigned int i = 0; i < map.platforms.size(); i++)
-		{
-			if (map.platforms[i]->collider.check_collision(player.collider, player.collison_dir, 1.0f))
-				player.on_collision();
-
-			for (unsigned int j = 0; j < player.snowballs.size(); j++)			
-				if (map.platforms[i]->collider.check_collision (player.snowballs[j]->collider, player.snowballs[j]->collison_dir, 1.0f)) {
-					player.snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
-															//player.snowballs.erase (player.snowballs.begin () + j);
-				}
-		}
-		player.update(GRAVITY, delta_time);
-
-		//camera.setCenter(player.get_center_position());
-		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
+		camera.setCenter((int)player.get_center_position().x, 
+			(int)player.get_center_position().y);
 		
-		player.shooting (window);													// metoda ze strzelaniem dla postaci 
-		for (unsigned int i = 0; i < player.snowballs.size (); i++) {				// update œnie¿ek
-			player.snowballs[i]->update (GRAVITY, delta_time);
-			if(player.snowballs[i]->delete_step == Snowball::delete_steps::to_del)
-				player.snowballs.erase(player.snowballs.begin () + i);
-		}			// mo¿na to pewnie ³adniej gdzieœ zrobic
-
-		// Te metody na razie tu tymczasowo potem sie ogarnie jakos razem wszystkie
 		window.clear();
-		//Camera
 		window.setView(camera);
-		//Drawing
 		window.draw(map);
-		for (auto it = enemies.begin (); it != enemies.end (); it++) {
-			if ((*it->second).hp <= 0)
-			{
-				sf::Texture t;
-				t.loadFromFile ("textures/victory.jpg");
-				sf::RectangleShape s;
-				s.setSize (WINDOW_SIZE);
-				s.setOrigin ({ 0.0f,0.0f });
-				s.setPosition (player.sprite.getPosition () - (WINDOW_SIZE / 2.0f));
-				s.setTexture (&t);
-				window.clear ();
-				window.draw (s);
-				window.display ();
-				while (1)
-				{
-					while (window.pollEvent (event))
-					{
-						if (event.type == sf::Event::Closed)
-						{
-							connection.exit = true;
-							window.close ();
-						}
-					}
-				}
-			}
-			for (unsigned int i = 0; i < player.snowballs.size (); i++)
-			{
-				if ((*it->second).collider.check_collision (player.snowballs[i]->collider, player.snowballs[i]->collison_dir, 1.0f))
-				{
-					player.snowballs[i]->on_collision ();
-				}
-			}
-			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++)
-			{
-				if (player.collider.check_collision ((*it->second).snowballs[i]->collider, (*it->second).snowballs[i]->collison_dir, 1.0f))
-				{
-					(*it->second).snowballs[i]->on_collision ();
-					player.hp -= 10;
-				}
-			}
-			(*it->second).animations[int ((*it->second).cur_animation)].set_sprite ((*it->second).sprite, (*it->second).is_moving);
-			for (unsigned int i = 0; i < map.platforms.size (); i++)
-			{
-				for (unsigned int j = 0; j < (*it->second).snowballs.size (); j++)
-					if (map.platforms[i]->collider.check_collision ((*it->second).snowballs[j]->collider, (*it->second).snowballs[j]->collison_dir, 1.0f)) 
-						(*it->second).snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
-
-			}
-			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++) {				// update œnie¿ek przeciwnika
-				(*it->second).snowballs[i]->update (GRAVITY, delta_time);
-				if ((*it->second).snowballs[i]->delete_step == Snowball::delete_steps::to_del)
-				{
-					(*it->second).last_deleted_snowball = (*it->second).snowballs.at (i)->id;
-					(*it->second).snowballs.erase ((*it->second).snowballs.begin () + i);
-				}
-			}
-
-			window.draw (*it->second);
-			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++)
-				(*it->second).snowballs[i]->draw (window);
-		}
-		window.draw(player); 
-		for (unsigned int i = 0; i < player.snowballs.size (); i++)				// nie mia³em pomys³u jak je rysowaæ xD
-			player.snowballs[i]->draw (window);									// trzeba jeszcze dorobic kolizje dla sniezek
-
+		player_loop ();
 		window.display();
 	}
 	receiving.join();
+}
+
+void World::game_end (game_stage gs)
+{
+	sf::Texture t;
+	sf::RectangleShape s;
+
+	if(gs == game_stage::defeat)
+		t.loadFromFile ("textures/defeat.jpg");
+	else
+		t.loadFromFile ("textures/victory.jpg");
+
+	s.setSize (WINDOW_SIZE);
+	s.setOrigin ({ 0.0f,0.0f });
+	s.setPosition (player.sprite.getPosition () - (WINDOW_SIZE / 2.0f));
+	s.setTexture (&t);
+
+	window.clear ();
+	window.draw (s);
+	window.display ();
+
+	std::this_thread::sleep_for (std::chrono::milliseconds (5000));
+	window.close ();				// zamyka okno po 5 sek od koñca gry 
+}
+
+void World::enemy_loop ()
+{
+	for (auto it = enemies.begin (); it != enemies.end (); it++) 
+	{
+		if ((*it->second).hp <= 0)
+			game_end (game_stage::victory);
+
+		for (unsigned int i = 0; i < player.snowballs.size (); i++)
+			if ((*it->second).collider.check_collision (player.snowballs[i]->collider, player.snowballs[i]->collison_dir, 1.0f))
+				player.snowballs[i]->on_collision ();
+
+		for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++)
+		{
+			if (player.collider.check_collision ((*it->second).snowballs[i]->collider, (*it->second).snowballs[i]->collison_dir, 1.0f))
+			{
+				(*it->second).snowballs[i]->on_collision ();
+				player.hp -= 10;									// jesli kolizja ze sniezka -> odejmujemy 10 hp graczowi
+			}
+
+			(*it->second).snowballs[i]->update (GRAVITY, delta_time);
+			(*it->second).snowballs[i]->draw (window);
+
+			if ((*it->second).snowballs[i]->delete_step == Snowball::delete_steps::to_del)
+			{
+				(*it->second).last_deleted_snowball = (*it->second).snowballs.at (i)->id;
+				(*it->second).snowballs.erase ((*it->second).snowballs.begin () + i);
+			}
+		}
+		(*it->second).animations[int ((*it->second).cur_animation)].set_sprite ((*it->second).sprite, (*it->second).is_moving);
+
+		for (unsigned int i = 0; i < map.platforms.size (); i++)
+			for (unsigned int j = 0; j < (*it->second).snowballs.size (); j++)
+				if (map.platforms[i]->collider.check_collision ((*it->second).snowballs[j]->collider, (*it->second).snowballs[j]->collison_dir, 1.0f))
+					(*it->second).snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
+
+		window.draw (*it->second);	
+	}
+}
+
+void World::player_loop ()
+{
+	if (player.hp <= 0)
+		game_end (game_stage::defeat);
+
+	for (unsigned int i = 0; i < map.platforms.size (); i++)
+		map.platforms[i]->update (GRAVITY, delta_time);
+
+	for (unsigned int i = 0; i < map.platforms.size (); i++)
+	{
+		if (map.platforms[i]->collider.check_collision (player.collider, player.collison_dir, 1.0f))
+			player.on_collision ();
+
+		for (unsigned int j = 0; j < player.snowballs.size (); j++)
+			if (map.platforms[i]->collider.check_collision (player.snowballs[j]->collider, player.snowballs[j]->collison_dir, 1.0f))
+				player.snowballs[j]->on_collision ();	// wykrywanie kolizji sniezek z platformami
+	}
+
+	player.update (GRAVITY, delta_time);
+
+	player.shooting (window);			
+	
+	for (unsigned int i = 0; i < player.snowballs.size (); i++) {				
+		player.snowballs[i]->update (GRAVITY, delta_time);
+
+		if (player.snowballs[i]->delete_step == Snowball::delete_steps::to_del)
+			player.snowballs.erase (player.snowballs.begin () + i);
+	}			
+
+	enemy_loop ();							//  petla przeciwnikow 
+
+	for (unsigned int i = 0; i < player.snowballs.size (); i++)
+		player.snowballs[i]->draw (window);
+
+	window.draw (player);
 }
 
 void World::update_enemies(sf::Packet packet)
