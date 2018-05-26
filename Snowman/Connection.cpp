@@ -80,7 +80,8 @@ std::mutex Connection::stack_mutex;
 sf::Packet& operator << (sf::Packet& packet, const Character& character)
 {
 	packet << character.sprite.getPosition ().x << character.sprite.getPosition ().y <<
-		(int)character.cur_animation << character.snowballs.size ();
+		(int)character.cur_animation << character.is_moving << 
+		character.animations[(int)character.cur_animation].frame << character.snowballs.size ();
 
 	if (character.snowballs.size () > 0)
 		packet << character.snowballs.back ()->id << character.snowballs.back ()->sprite.getPosition ().x <<
@@ -98,12 +99,19 @@ void operator >> (sf::Packet& packet, Character& character)
 	int snowball_id;
 	int number_of_snowballs;
 	bool is_in_vector = false;
+	bool is_moving;
+	int frame;
 	sf::Vector2f vel;
 
 	packet >> pos.x >> pos.y;
 	character.sprite.setPosition (pos);
 	packet >> animation_dir;
+	if (animation_dir > 1)		// temporary condition 4 testing 
+		animation_dir = 1;		// cuz not workin perfect jet
 	character.cur_animation = (Character::AnimationIndex)animation_dir;
+	packet >> is_moving >> frame;
+	character.is_moving = is_moving;
+	character.animations[(int)character.cur_animation].frame = frame;
 
 	packet >> number_of_snowballs;
 	if (number_of_snowballs > 0)

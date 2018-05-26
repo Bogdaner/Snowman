@@ -5,6 +5,7 @@
 Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	:Object(position, size)
 {
+	is_moving = false;
 	cur_animation = AnimationIndex::WalkingRight;
 	animations[int (AnimationIndex::WalkingLeft)] = Animation (int (AnimationIndex::WalkingLeft));
 	animations[int (AnimationIndex::WalkingRight)] = Animation (int (AnimationIndex::WalkingRight));
@@ -16,11 +17,12 @@ void Character::update(const float gravity, const float delta_time)
 	// tu jeszcze bd updateowaæ klatki;
 	animations[int (cur_animation)].update (delta_time);
 	if (velocity.x == 0)
-		animations[int (cur_animation)].set_sprite (sprite, false);
+		is_moving = false;
 	else
-	{
-		animations[int (cur_animation)].set_sprite (sprite, true);
-	}
+		is_moving = true;
+	
+	animations[int (cur_animation)].set_sprite (sprite, is_moving);
+
 	sprite.move(velocity * delta_time);
 }
 

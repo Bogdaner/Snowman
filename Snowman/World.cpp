@@ -58,7 +58,7 @@ void World::start()
 
 		//camera.setCenter(player.get_center_position());
 		camera.setCenter((int)player.get_center_position().x, (int)player.get_center_position().y); // to rozwiazuje bug mapy ale postac zaczyna latac xDD
-
+		
 		player.shooting (window);													// metoda ze strzelaniem dla postaci 
 		for (unsigned int i = 0; i < player.snowballs.size (); i++) {				// update œnie¿ek
 			player.snowballs[i]->update (GRAVITY, delta_time);
@@ -72,7 +72,9 @@ void World::start()
 		window.setView(camera);
 		//Drawing
 		window.draw(map);
+		std::cout << (int)player.cur_animation << std::endl;
 		for (auto it = enemies.begin (); it != enemies.end (); it++) {
+			(*it->second).animations[int ((*it->second).cur_animation)].set_sprite ((*it->second).sprite, (*it->second).is_moving);
 			for (unsigned int i = 0; i < map.platforms.size (); i++)
 			{
 				for (unsigned int j = 0; j < (*it->second).snowballs.size (); j++)
@@ -114,7 +116,7 @@ void World::update_enemies(sf::Packet packet)
 		{
 			int tmp;
 			int count;
-			packet >> tmp >> tmp >> tmp;
+			packet >> tmp >> tmp >> tmp >> tmp >> tmp;
 			packet >> count;
 			if (count > 0)
 				packet >> tmp >> tmp >> tmp >> tmp >> tmp;
