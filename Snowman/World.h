@@ -15,6 +15,13 @@ public:
 	~World();
 	void start();
 private:
+	enum game_stage {
+		victory,
+		defeat
+	};
+	void game_end (game_stage gs);
+	void enemy_loop ();
+	void player_loop ();
 	void update_enemies(sf::Packet packet);
 	std::map<sf::Uint32, std::unique_ptr<Character>> enemies;
 	sf::Uint32 ID;
