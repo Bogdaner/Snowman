@@ -5,6 +5,7 @@
 #include <stack>
 #include <atomic>
 #include <mutex>
+#include <iostream>
 
 class Connection
 {
@@ -21,6 +22,7 @@ public:
 	void receive_data();
 	bool is_queue_empty();
 private:
+	sf::IpAddress set_serverIp();
 	sf::UdpSocket socket;
 	sf::IpAddress server_ip;
 	std::stack<sf::Packet> received_packets;

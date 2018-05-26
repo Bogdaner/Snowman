@@ -6,6 +6,7 @@ Server::Server() : exit{false}
 	if (socket.bind(SERVER_PORT) != sf::Socket::Done)
 		throw CantBind;
 	//socket.setBlocking(false);
+	std::cout << sf::IpAddress::getLocalAddress() << std::endl;
 }
 
 

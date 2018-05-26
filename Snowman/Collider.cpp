@@ -10,6 +10,7 @@ Collider::Collider(sf::RectangleShape& body) : body{body}
 
 Collider::~Collider()
 {
+
 }
 
 void Collider::move(const float dx, const float dy)

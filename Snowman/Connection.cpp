@@ -3,7 +3,7 @@
 
 Connection::Connection() : exit{false}
 {
-	server_ip = sf::IpAddress::getLocalAddress();
+	server_ip = set_serverIp();
 	socket.bind(sf::Socket::AnyPort);
 }
 
@@ -68,6 +68,17 @@ void Connection::receive_data()
 bool Connection::is_queue_empty()
 {
 	return received_packets.empty();
+}
+
+sf::IpAddress Connection::set_serverIp()
+{
+	sf::IpAddress server;
+	do
+	{
+		std::cout << "Type the address or name of the server to connect to: ";
+		std::cin >> server;
+	} while (server == sf::IpAddress::None);
+	return server;
 }
 
 void Connection::load_snowballs (sf::Packet& packet, Character& character)
