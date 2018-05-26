@@ -72,7 +72,6 @@ void World::start()
 		window.setView(camera);
 		//Drawing
 		window.draw(map);
-		std::cout << (int)player.cur_animation << std::endl;
 		for (auto it = enemies.begin (); it != enemies.end (); it++) {
 			(*it->second).animations[int ((*it->second).cur_animation)].set_sprite ((*it->second).sprite, (*it->second).is_moving);
 			for (unsigned int i = 0; i < map.platforms.size (); i++)
@@ -82,7 +81,7 @@ void World::start()
 						(*it->second).snowballs[j]->on_collision ();	// wykrywanie kolizji dla sniezek z platformami
 
 			}
-			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++) {				// update œnie¿ek
+			for (unsigned int i = 0; i < (*it->second).snowballs.size (); i++) {				// update œnie¿ek przeciwnika
 				(*it->second).snowballs[i]->update (GRAVITY, delta_time);
 				if ((*it->second).snowballs[i]->delete_step == Snowball::delete_steps::to_del)
 				{
@@ -115,8 +114,9 @@ void World::update_enemies(sf::Packet packet)
 		if (received_ID == ID)
 		{
 			int tmp;
+			bool tmpb;
 			int count;
-			packet >> tmp >> tmp >> tmp >> tmp >> tmp;
+			packet >> tmp >> tmp >> tmp >> tmpb >> tmp;
 			packet >> count;
 			if (count > 0)
 				packet >> tmp >> tmp >> tmp >> tmp >> tmp;
