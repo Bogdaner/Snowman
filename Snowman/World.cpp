@@ -2,7 +2,7 @@
 #include "World.h"
 
 
-World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
+World::World() : window{ sf::VideoMode(WINDOW_SIZE.x, WINDOW_SIZE.y), "Game" }, delta_time{ 0.0f }, player(sf::Vector2f(780.0f, 600.0f), sf::Vector2f(50.0f, 50.0f)), // na razie wspolrzedne gracza z dupy 
 	camera{sf::Vector2f(0.0f, 0.0f), WINDOW_SIZE} // camera (player position, screen size)
 {
 	ID = connection.ask_for_id();
@@ -18,7 +18,7 @@ void World::start()
 	std::thread receiving(&Connection::receive_data, &connection);
 	while (window.isOpen())
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(0));
 
 		connection.send_data(player, ID);
 		if (!connection.is_queue_empty())
@@ -162,7 +162,7 @@ void World::update_enemies(sf::Packet packet)
 		else
 			ids.push_back(received_ID);
 		if (enemies.find(received_ID) == enemies.end())
-			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(400.0f, 300.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
+			enemies[received_ID] = std::make_unique<Character>(sf::Vector2f(780.0f, 600.0f), sf::Vector2f(50.0f, 50.0f));// tutaj tez brakuje tworzenia nowego przeciwnika
 
 		packet >> *enemies[received_ID];
 	}

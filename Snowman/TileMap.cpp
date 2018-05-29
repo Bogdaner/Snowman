@@ -49,10 +49,18 @@ void TileMap::select_texture(sf::Vertex* v, char tex)
 	switch (tex)
 	{
 	case '.':
-		tmp.x = 7, tmp.y = 4;
+		tmp.x = 7, tmp.y = 3;
 		break;
 	case 'z':
 		tmp.x = 8, tmp.y = 12;
+		is_platform = true;
+		break;
+	case 's':
+		tmp.x = 2, tmp.y = 11;
+		is_platform = true;
+		break;
+	case 'c':
+		tmp.x = 10, tmp.y = 12;
 		is_platform = true;
 		break;
 	default:
