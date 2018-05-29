@@ -10,6 +10,8 @@ Character::Character (const sf::Vector2f& position, const sf::Vector2f& size)
 	cur_animation = AnimationIndex::WalkingRight;
 	animations[int (AnimationIndex::WalkingLeft)] = Animation (int (AnimationIndex::WalkingLeft));
 	animations[int (AnimationIndex::WalkingRight)] = Animation (int (AnimationIndex::WalkingRight));
+	if (!font.loadFromFile("textures/arial.ttf"))
+		throw CantLoadFont;
 }
 
 void Character::update(const float gravity, const float delta_time)
@@ -43,6 +45,17 @@ void Character::on_collision()
 sf::Vector2f Character::get_center_position() const
 {
 	return sprite.getPosition();
+}
+
+void Character::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	Object::draw(target, states);
+	sf::Text t;
+	t.setFont(font);
+	t.setString(std::to_string(hp));
+	t.setPosition(sprite.getPosition() - sf::Vector2f(30.0f, 55.0f));
+	t.setFillColor(sf::Color::Red);
+	target.draw(t);
 }
 
 void Character::set_velocity (sf::Vector2f& dir, const float gravity, const float delta_time)
@@ -88,5 +101,8 @@ void Character::shooting(sf::RenderWindow& window)
 	}
 }
 
+
+
 const float Character::STRENGTH = 8.5f;												// si³a rzutu -> wiêksza == œnie¿ka leci dalej
 const float Character::JUMP_HEIGHT = 250.0f;
+const std::string Character::CantLoadFont = "Cant load font";

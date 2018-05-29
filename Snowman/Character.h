@@ -1,4 +1,5 @@
 #pragma once
+#include "SFML/Main.hpp"
 #include "Object.h"
 #include "Animation.h"
 #include "Snowball.h"
@@ -24,12 +25,15 @@ public:
 	};
 	AnimationIndex cur_animation;
 	Animation animations[int (AnimationIndex::Count)];
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	int hp;
 	int last_deleted_snowball;     // Temporary! or maybe not... 
 private:
+	sf::Font font;
 	bool can_shoot;
 	bool can_jump;
 	void set_velocity(sf::Vector2f& dir, const float gravity, const float delta_time);
 	static const float STRENGTH;
 	static const float JUMP_HEIGHT;
+	static const std::string CantLoadFont;
 };

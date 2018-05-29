@@ -19,6 +19,5 @@ private:
 protected:
 	sf::Vector2f direction;
 	sf::Vector2f size;
-	static const float WEIGHT;
 	static const float SPEED;
 };

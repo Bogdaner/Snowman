@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Network.hpp"
 #include "Requests.h"
+#include "SFML/Graphics/Font.hpp"
 #include "../Snowman/Character.h"
 #include "../Snowman/Connection.h"
 #include <map>
